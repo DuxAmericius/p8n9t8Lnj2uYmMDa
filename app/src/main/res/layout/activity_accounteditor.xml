@@ -11,18 +11,18 @@
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:paddingTop="0dp"
-        tools:context="com.fbla.dulaney.fblayardsale.AccountState">
+        tools:context="com.fbla.dulaney.fblayardsale.AccountEditor">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/updateinfo"
-            android:id="@+id/updateinfo"/>
+            android:id="@+id/accounttype"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editstate"/>
+            android:id="@+id/edit"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -30,19 +30,39 @@ public class Account extends AppCompatActivity implements View.OnClickListener {
         mBinding.zip.setOnClickListener(this);
 
         //SharedPreferences sharedpreferences = getSharedPreferences(pressed, Context.MODE_PRIVATE);
-
     }
+
 
     @Override
     public void onClick(View v) {
+        SharedPreferences pref = getSharedPreferences(pressed, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
         switch (v.getId()) {
 
             case R.id.state:
-                SharedPreferences sharedpreferences = getSharedPreferences(pressed, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putInt("click", 0);
+                editor.putString("click", getString(R.string.accountstate));
                 editor.commit();
-                this.startActivity(new Intent(this, AccountState.class));
+                this.startActivity(new Intent(this, AccountEditor.class));
+                break;
+            case R.id.region: //this never gets called and it just goes to the next option
+                editor.putString("click", getString(R.string.accountregion));
+                editor.commit();
+                this.startActivity(new Intent(this, AccountEditor.class));
+                break;
+            case R.id.chapter:
+                editor.putString("click", getString(R.string.accountchapter));
+                editor.commit();
+                this.startActivity(new Intent(this, AccountEditor.class));
+                break;
+            case R.id.address: //this never gets called and it just goes to the next option
+                editor.putString("click", getString(R.string.accountaddress));
+                editor.commit();
+                this.startActivity(new Intent(this, AccountEditor.class));
+                break;
+            case R.id.zip:
+                editor.putString("click", getString(R.string.accountzip));
+                editor.commit();
+                this.startActivity(new Intent(this, AccountEditor.class));
                 break;
             default:
                 break;

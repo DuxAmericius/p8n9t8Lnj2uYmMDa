@@ -28,6 +28,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.account:
                 getActivity().startActivity(new Intent(getActivity(), Account.class));
                 break;
+            case R.id.add:
+                getActivity().startActivity(new Intent(getActivity(), AddSales.class));
+                break;
             default:
                 break;
         }
@@ -78,6 +81,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_home, container, false);
         mBinding.account.setOnClickListener(this);
+        mBinding.add.setOnClickListener(this);
         View view = mBinding.getRoot();
 
         // Inflate the layout for this fragment

@@ -1,6 +1,8 @@
 package com.fbla.dulaney.fblayardsale;
 
 import android.content.Context;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +11,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class TextFragment extends Fragment {
+import com.fbla.dulaney.fblayardsale.databinding.ListItemsBinding;
+
+public class TextFragment extends Fragment implements View.OnClickListener {
 
     private TextFragment.OnFragmentInteractionListener mListener;
     private FragmentActivity mParent;
+    ListItemsBinding mBinding;
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.comments:
+                getActivity().startActivity(new Intent(getActivity(), Comments.class));
+                break;
+            default:
+                break;
+        }
+    }
 
     public interface OnFragmentInteractionListener {
         public void onTextInteraction(View v);
@@ -55,9 +71,10 @@ public class TextFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_text, container, false);
-        mParent = getActivity();
-        return v;
+        mBinding = DataBindingUtil.inflate(
+                inflater, R.layout.list_items, container, false);
+        mBinding.comments.setOnClickListener(this);
+        View view = mBinding.getRoot();
+        return view;
     }
 }

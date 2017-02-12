@@ -22,8 +22,16 @@
             android:label="Account"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".AccountState"
-            android:label="AccountState"
+        <activity android:name=".AccountEditor"
+            android:label="AccountEditor"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".AddSales"
+            android:label="AddSales"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".Comments"
+            android:label="Comments"
             android:screenOrientation="portrait">
         </activity>
         <meta-data
