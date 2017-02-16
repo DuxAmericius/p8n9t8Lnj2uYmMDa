@@ -13,11 +13,11 @@
     android:paddingTop="0dp"
     tools:context="com.fbla.dulaney.fblayardsale.YardSaleMain">
 
-    <!--android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/list"
-        android:scrollbars="vertical" /-->
+        android:scrollbars="vertical" />
 
 </LinearLayout>
 

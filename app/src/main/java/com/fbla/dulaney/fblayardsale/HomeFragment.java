@@ -19,7 +19,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     private FragmentActivity mParent;
     FragmentHomeBinding mBinding;
-    HomeFragment mThis;
 
     @Override
     public void onClick(View v) {
@@ -30,6 +29,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.add:
                 getActivity().startActivity(new Intent(getActivity(), AddSales.class));
+                break;
+            case R.id.logout:
+                Data.Logout();
                 break;
             default:
                 break;
@@ -82,6 +84,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 inflater, R.layout.fragment_home, container, false);
         mBinding.account.setOnClickListener(this);
         mBinding.add.setOnClickListener(this);
+        mBinding.logout.setOnClickListener(this);
         View view = mBinding.getRoot();
 
         // Inflate the layout for this fragment
@@ -102,7 +105,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         mParent = getActivity();
-        mThis = this;
     }
 
 
