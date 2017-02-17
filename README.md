@@ -158,3 +158,8 @@ https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-and
 https://portal.azure.com/
 
 https://console.developers.google.com/apis/credentials?project=fbla-yardsale
+
+COPYRIGHT NOTATIONS
+-------------------
+
+http://fbla-pbl.org/pbl/communications/image-library
