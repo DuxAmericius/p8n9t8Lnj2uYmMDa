@@ -105,6 +105,7 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
                 this.startActivityForResult(j, 2);
                 break;
             case R.id.another:
+                addItem(v);
                 this.finish();
                 this.startActivity(new Intent(this, AddSales.class));
                 break;
