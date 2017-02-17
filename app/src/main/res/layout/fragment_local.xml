@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- fragment_local.xml
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+-->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
 <LinearLayout
     android:orientation="vertical"
-    android:id="@+id/fragment_list"
+    android:id="@+id/fragment_local"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="0dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
+    android:background="#BD2E37"
     tools:context="com.fbla.dulaney.fblayardsale.YardSaleMain">
 
     <android.support.v7.widget.RecyclerView

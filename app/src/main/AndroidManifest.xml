@@ -3,13 +3,20 @@
     package="com.fbla.dulaney.fblayardsale">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
+        android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".YardSaleMain"
             android:label="FBLA Yard Sale"
             android:screenOrientation="portrait">
@@ -20,20 +27,24 @@
             </intent-filter>
         </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-        <activity android:name=".Account"
-            android:label="Account"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".AccountEditor"
-            android:label="AccountEditor"
+        <activity android:name=".AccountEdit"
+            android:label="FBLA Yard Sale - Account"
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".AddSales"
-            android:label="AddSales"
+            android:label="FBLA Yard Sale - Add Sales"
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".Comments"
-            android:label="Comments"
+            android:label="FBLA Yard Sale - Comments"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".MySales"
+            android:label="FBLA Yard Sale - My Sales"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".Help"
+            android:label="FBLA Yard Sale - Help"
             android:screenOrientation="portrait">
         </activity>
 

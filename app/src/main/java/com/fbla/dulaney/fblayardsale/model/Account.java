@@ -13,6 +13,12 @@ public class Account {
     private String mId;
 
     /*
+    User Name
+     */
+    @com.google.gson.annotations.SerializedName("name")
+    private String mName;
+
+    /*
     State
      */
     @com.google.gson.annotations.SerializedName("state")
@@ -44,6 +50,7 @@ public class Account {
 
     public Account() {
         mId = "";
+        mName = "";
         mAddress = "";
         mChapter = "";
         mRegion = "";
@@ -59,6 +66,8 @@ public class Account {
     // Getters and Setters
     public String getId() { return mId; }
     public final void setId(String id) { mId = id; }
+    public String getName() { return mName; }
+    public final void setName(String name) { mName = name; }
     public String getState() { return mState; }
     public final void setState(String state) { mState = state; }
     public String getRegion() { return mRegion; }

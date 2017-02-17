@@ -1,5 +1,9 @@
 package com.fbla.dulaney.fblayardsale.model;
 
+import android.graphics.Bitmap;
+
+import com.fbla.dulaney.fblayardsale.FblaPicture;
+
 /**
  * Created by josh on 2/12/2017.
  */
@@ -36,8 +40,23 @@ public class SaleItem {
     @com.google.gson.annotations.SerializedName("price")
     private float mPrice;
 
-    public SaleItem() {
+    /*
+    Picture (Base64 Encoded String)
+     */
+    @com.google.gson.annotations.SerializedName("picture")
+    private String mPictureBase64;
 
+    @com.google.gson.annotations.Expose(serialize = false)
+    private Account mAccount;
+
+    public SaleItem() {
+        mAccount = null;
+        mName = "";
+        mId = "";
+        mUserId = "";
+        mDescription = "";
+        mPictureBase64 = "";
+        mPrice = 0;
     }
 
     @Override
@@ -56,6 +75,14 @@ public class SaleItem {
     public final void setDescription(String description) { mDescription = description; }
     public float getPrice() { return mPrice; }
     public final void setPrice(float price) { mPrice = price; }
+    public Bitmap getPicture() {
+        return FblaPicture.DecodeFromBase64(mPictureBase64);
+    }
+    public final void setPicture(Bitmap image) {
+        mPictureBase64 = FblaPicture.EncodeToBase64(image);
+    }
+    public Account getAccount() { return mAccount; }
+    public final void setAccount(Account account) { mAccount = account; }
 
     @Override
     public boolean equals(Object o) {

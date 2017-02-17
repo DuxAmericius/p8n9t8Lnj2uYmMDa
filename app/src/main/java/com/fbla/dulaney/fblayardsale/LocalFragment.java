@@ -5,19 +5,20 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fbla.dulaney.fblayardsale.databinding.ListItemsBinding;
+import com.fbla.dulaney.fblayardsale.controller.LocalController;
+import com.fbla.dulaney.fblayardsale.databinding.FragmentLocalBinding;
 
-public class TextFragment extends Fragment implements View.OnClickListener {
+public class LocalFragment extends Fragment implements View.OnClickListener {
 
-    private TextFragment.OnFragmentInteractionListener mListener;
+    private LocalFragment.OnFragmentInteractionListener mListener;
     private FragmentActivity mParent;
-    ListItemsBinding mBinding;
+    FragmentLocalBinding mBinding;
 
     @Override
     public void onClick(View v) {
@@ -31,18 +32,18 @@ public class TextFragment extends Fragment implements View.OnClickListener {
     }
 
     public interface OnFragmentInteractionListener {
-        public void onTextInteraction(View v);
+        public void onLocalInteraction(View v);
     }
 
     // Implementation of Fragment
-    public static TextFragment newInstance(String param1, String param2) {
-        TextFragment fragment = new TextFragment();
+    public static LocalFragment newInstance(String param1, String param2) {
+        LocalFragment fragment = new LocalFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public TextFragment() {
+    public LocalFragment() {
         // Required empty public constructor
     }
 
@@ -50,7 +51,7 @@ public class TextFragment extends Fragment implements View.OnClickListener {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mListener = (TextFragment.OnFragmentInteractionListener) context;
+            mListener = (LocalFragment.OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -72,9 +73,21 @@ public class TextFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(
-                inflater, R.layout.list_items, container, false);
-        mBinding.comments.setOnClickListener(this);
+                inflater, R.layout.fragment_local, container, false);
+        //mBinding.comments.setOnClickListener(this);
         View view = mBinding.getRoot();
         return view;
     }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        // Setup the RecyclerView here because the data changes.
+        mBinding.list.setLayoutManager(new LinearLayoutManager(mParent));
+        LocalAdapter adapter = new LocalAdapter(this);
+        LocalController.AttachAdapter(adapter);
+        LocalController.Refresh();
+        mBinding.list.setAdapter(adapter);
+    }
+
 }

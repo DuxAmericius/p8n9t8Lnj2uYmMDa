@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- help07_deletesales.xml
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/help07_deletesales"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true"
+        android:background="#ffffff">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#6CA0D7">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="How to Delete Your Sales (Continued from above):"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:textSize="24sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3. Press the red &quot;X&quot; on the item you want to delete"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4. Press &quot;Confirm&quot; to delete item"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+				
+			<TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5. OR press &quot;Cancel&quot; to not delete item"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

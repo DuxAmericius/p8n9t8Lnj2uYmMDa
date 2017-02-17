@@ -1,12 +1,10 @@
 package com.fbla.dulaney.fblayardsale;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +23,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
 
             case R.id.account:
-                getActivity().startActivity(new Intent(getActivity(), Account.class));
+                if (FblaLogon.getLoggedOn()) {
+                    getActivity().startActivity(new Intent(getActivity(), AccountEdit.class));
+                }
                 break;
             case R.id.add:
-                getActivity().startActivity(new Intent(getActivity(), AddSales.class));
+                if (FblaLogon.getLoggedOn()) {
+                    getActivity().startActivity(new Intent(getActivity(), AddSales.class));
+                }
+                break;
+            case R.id.my:
+                if (FblaLogon.getLoggedOn()) {
+                    getActivity().startActivity(new Intent(getActivity(), MySales.class));
+                }
+                break;
+            case R.id.help:
+                getActivity().startActivity(new Intent(getActivity(), Help.class));
                 break;
             case R.id.logout:
-                Data.Logout();
+                YardSaleMain parent = (YardSaleMain)getActivity();
+                parent.Logoff();
                 break;
             default:
                 break;
@@ -84,6 +95,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 inflater, R.layout.fragment_home, container, false);
         mBinding.account.setOnClickListener(this);
         mBinding.add.setOnClickListener(this);
+        mBinding.my.setOnClickListener(this);
+        mBinding.help.setOnClickListener(this);
         mBinding.logout.setOnClickListener(this);
         View view = mBinding.getRoot();
 

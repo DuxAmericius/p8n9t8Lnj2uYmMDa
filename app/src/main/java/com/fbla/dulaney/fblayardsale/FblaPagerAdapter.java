@@ -35,11 +35,8 @@ public class FblaPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 fragment = new HomeFragment();
                 break;
-            case 1:
-                fragment = new TextFragment();
-                break;
             default:
-                fragment = new SearchFragment();
+                fragment = new LocalFragment();
                 break;
         }
         Bundle args = new Bundle();
@@ -52,6 +49,6 @@ public class FblaPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 }

@@ -8,20 +8,32 @@
 */
 package com.fbla.dulaney.fblayardsale;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.fbla.dulaney.fblayardsale.controller.MySalesController;
 import com.fbla.dulaney.fblayardsale.databinding.ActivityAddsalesBinding;
+
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.UUID;
 
@@ -43,47 +55,37 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addsales);
-        //mThis = this;
+
+        if (!FblaLogon.getLoggedOn()) {
+            Toast.makeText(this, "Unable to connect to Azure. Please try again.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        mSaleItemTable = FblaLogon.getClient().getTable(SaleItem.class);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_addsales);
+        FblaPicture.setLayoutImage(mBinding.activityAddsales);
+        setSupportActionBar(mBinding.myToolbar);
+        mBinding.gallery.setOnClickListener(this);
+        mBinding.camera.setOnClickListener(this);
         mBinding.back.setOnClickListener(this);
         mBinding.finish.setOnClickListener(this);
         mBinding.another.setOnClickListener(this);
-
-        // Connect to Azure and authenticate the user.
-        Data.Initialize(this);
-        // Get the table object for the SaleItem model.
-        mSaleItemTable = Data.getClient().getTable(SaleItem.class);
-
-        //TextView type = (TextView)findViewById(R.id.account);
-/*
-        SharedPreferences sharedpreferences = getSharedPreferences(pressed, Context.MODE_PRIVATE);
-        mClicked = sharedpreferences.getString("click", "button");
-        Log.d("Comments", "onCreate for button clicked (" + mClicked + ")");
-        if (mClicked.equals(getString(R.string.accountstate))) {
-            type.setText("Enter State Name:");
-        } else if (mClicked.equals(getString(R.string.accountregion))) {
-            type.setText("Enter Region Number:");
-        } else if (mClicked.equals(getString(R.string.accountchapter))) {
-            type.setText("Enter Chapter Name:");
-        } else if (mClicked.equals(getString(R.string.accountaddress))) {
-            type.setText("Enter Address:");
-        } else if (mClicked.equals(getString(R.string.accountzip))) {
-            type.setText("Enter Zip:");
-        } else {
-//            SharedPreferences pnone = getSharedPreferences(pressed, Context.MODE_PRIVATE);
-            //          SharedPreferences.Editor enone = pnone.edit();
-            //        enone.putString("click", "");
-            //      enone.commit();
-            this.finish();
-        }
-*/
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.gallery:
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Log.d("CameraFragment", "Starting GALLERY Intent");
+                this.startActivityForResult(i, 1);
+                break;
+            case R.id.camera:
+                Intent j = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                this.startActivityForResult(j, 2);
+                break;
             case R.id.another:
                 this.finish();
                 this.startActivity(new Intent(this, AddSales.class));
@@ -106,15 +108,21 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
 
     // Add a new item to the database.
     private void addItem(View view) {
-        if (Data.getClient() == null) return;
+        if (!FblaLogon.getLoggedOn()) return;
 
         // Create a new item from the SaleItem model.
         final SaleItem item = new SaleItem();
         item.setId(UUID.randomUUID().toString());
         item.setName(mBinding.editname.getText().toString());
-        item.setUserId(Data.getUserId());
+        item.setUserId(FblaLogon.getUserId());
         item.setDescription(mBinding.editdesc.getText().toString());
-        item.setPrice(Float.parseFloat(mBinding.editprice.getText().toString()));
+        String sPrice = mBinding.editprice.getText().toString();
+        if (sPrice == null || sPrice.equals("")) item.setPrice(0);
+        else item.setPrice(Float.parseFloat(mBinding.editprice.getText().toString()));
+        Bitmap b = FblaPicture.GetPictureFromView(mBinding.picture);
+        if (b != null) {
+            item.setPicture(b);
+        }
 
         // Save the item to the database over the internet.
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -122,18 +130,79 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
             protected Void doInBackground(Void... params) {
                 try {
                     mSaleItemTable.insert(item);
+                    Log.d("AddSales:insert", "Created item " + item.getName());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // Do stuff on UI here
+                            item.setAccount(FblaLogon.getAccount());
+                            MySalesController.addItem(item);
                         }
                     });
                 } catch (Exception e) {
-                    Log.d("AddItem", e.toString());
+                    Log.d("AddSales:insert", e.toString());
                 }
                 return null;
             }
         };
-        Data.runAsyncTask(task);
+        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Results can come from the Camera, Gallery, or the Comments activity.
+        if (resultCode == android.app.Activity.RESULT_OK) {
+            if (requestCode == 2 && data != null) { // From Camera
+                Log.d("AddSales", "Result from Camera");
+
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                        // Should we show an explanation?
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            // Explain to the user why we need to read the contacts
+                        } else {
+                            ActivityCompat.requestPermissions(this,
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                        }
+                    }
+                }
+
+                try {
+                    Bundle extras = data.getExtras();
+                    Bitmap image = (Bitmap) extras.get("data");
+                    image = FblaPicture.ResizePicture(this.getApplicationContext(), image);
+                    FblaPicture.LoadPictureOnView(mBinding.picture, image);
+                } catch (Exception ex) {
+                    Log.e("AddSales:camera", ex.getMessage());
+                }
+            } else if (requestCode == 1 && data != null) // Gallery
+            {
+                // Gallery
+                Log.d("AddSales", "Result from Gallery");
+
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                        // Should we show an explanation?
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            // Explain to the user why we need to read the contacts
+                        } else {
+                            ActivityCompat.requestPermissions(this,
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                        }
+                    }
+                }
+
+                try {
+                    Uri pickedImage = data.getData();
+                    InputStream stream = getContentResolver().openInputStream(pickedImage);
+                    Bitmap image = BitmapFactory.decodeStream(stream);
+                    image = FblaPicture.ResizePicture(this.getApplicationContext(), image);
+                    FblaPicture.LoadPictureOnView(mBinding.picture, image);
+                } catch (Exception ex) {
+                    Log.e("AddSales:gallery", ex.getMessage());
+                }
+            }
+        }
+    } // onActivityResult
 }
