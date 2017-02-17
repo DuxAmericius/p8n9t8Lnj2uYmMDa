@@ -11,17 +11,20 @@ Mobile Application Development 2016-17
 LIST OF FILES
 -------------
 
-FBLAYardSale.apk
+FBLA-YardSale.apk
 
-    * Compiled Android Application
+    (Compiled Android Application)
     
 Documentation
 
-    FBLA
+    Documentation - Android Java.pdf (Printout of Java source code)
+    Documentation - Android Layouts.pdf (Printout of XML Layout source code)
+    Documentation - Android Screenshots.pdf (Screenshots of Android application)
+    Documentation - Microsoft Azure.pdf (Screenshots of Azure configuration)
     
 Source
 
-    FBLA
+    / app / src / main (Android Studio source code)
 
 REQUIREMENTS
 ------------
