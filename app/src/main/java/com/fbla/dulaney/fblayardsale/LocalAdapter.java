@@ -77,7 +77,7 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
         switch (v.getId()) {
             case R.id.comments:
                 if (FblaLogon.getLoggedOn()) {
-                    int position = (int)mBinding.comments.getTag();
+                    int position = (int)v.getTag();
                     CommentListController.setItem(LocalController.getItem(position));
                     CommentListController.Refresh();
                     mParentListener.onClick(v);
