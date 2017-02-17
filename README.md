@@ -103,9 +103,9 @@ How to Edit Account Info:
     1. Go to Home page
     2. Press "Account" 
     3. Edit desired information
-*IMPORTANT* ENTER YOUR ZIPCODE TO SEE ITEMS IN THE SAME ZIPCODE ON THE LOCAL FRAGMENT
     4. Click "Save" to save data and close activity
     5. OR click "Cancel" to not save data and close activity
+*IMPORTANT* ENTER YOUR ZIPCODE TO SEE ITEMS IN THE SAME ZIPCODE ON THE LOCAL FRAGMENT
 
 How to Add Sales:
 
