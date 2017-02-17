@@ -1,13 +1,17 @@
+/* AccountEdit.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This activity is used to display and edit account information. When
+   a user first logs it, you are forwarded directly to this activity.
+*/
 package com.fbla.dulaney.fblayardsale;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
-import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,13 +23,9 @@ import com.fbla.dulaney.fblayardsale.databinding.ActivityAccountBinding;
 import com.fbla.dulaney.fblayardsale.model.Account;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AccountEdit extends AppCompatActivity implements View.OnClickListener {
 
     ActivityAccountBinding mBinding;
-    String pressed;
     ArrayAdapter<CharSequence> mStateAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +60,6 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        //SharedPreferences pref = getSharedPreferences(pressed, Context.MODE_PRIVATE);
-        //SharedPreferences.Editor editor = pref.edit();
         switch (v.getId()) {
 
             case R.id.save:
@@ -71,7 +69,7 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
                     account.setAddress(mBinding.address.getText().toString());
                     account.setChapter(mBinding.chapter.getText().toString());
                     account.setRegion(mBinding.region.getText().toString());
-                    // If zip changed, refresh the LocalController
+                    // If zip code changed, refresh the LocalController
                     if (!account.getZipCode().equals(mBinding.zip.getText().toString())) {
                         account.setZipCode(mBinding.zip.getText().toString());
                         LocalController.Refresh();
@@ -113,7 +111,6 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onBackPressed()
     {
-        //this.startActivity(new Intent(this, YardSaleMain.class));
         this.finish();
     }
 }

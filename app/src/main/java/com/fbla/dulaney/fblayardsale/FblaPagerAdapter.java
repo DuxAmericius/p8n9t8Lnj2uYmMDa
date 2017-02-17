@@ -1,10 +1,11 @@
-/* =========================== FblaPagerAdapter.java ===========================
-                           Josh Talley, Daniel O'Donnell
+/* FblaPagerAdapter.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
                                 Dulaney High School
                       Mobile Application Development 2016-17
    =============================================================================
+   Purpose: This simply loads the appropriate fragment onto the YardSaleMain activity.
 */
-
 package com.fbla.dulaney.fblayardsale;
 
 import android.content.Context;
@@ -13,11 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-/**
- * FblaPagerAdapter
- *
- * Purpose: This simply loads the appropriate fragment onto the YardSaleMain activity.
- */
 public class FblaPagerAdapter extends FragmentStatePagerAdapter {
     protected Context mContext;
 

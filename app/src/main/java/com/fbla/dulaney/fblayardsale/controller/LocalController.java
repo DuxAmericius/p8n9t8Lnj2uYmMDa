@@ -23,10 +23,6 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.util.ArrayList;
 
-/**
- * Created by josh on 2/16/2017.
- */
-
 public class LocalController {
     private static ArrayList<SaleItem> mSaleItems = new ArrayList<>();
     private static ArrayList<RecyclerView.Adapter> mAdapters = new ArrayList<>();

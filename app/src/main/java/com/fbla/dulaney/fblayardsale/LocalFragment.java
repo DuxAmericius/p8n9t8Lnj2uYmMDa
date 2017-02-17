@@ -1,3 +1,13 @@
+/* LocalFragment.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This is the second fragment loaded on YardSaleMain. It will display
+   all sale items that are in your same zip code, excluding any of your own
+   sale items. You can also swipe right to get to the Home fragment.
+*/
 package com.fbla.dulaney.fblayardsale;
 
 import android.content.Context;

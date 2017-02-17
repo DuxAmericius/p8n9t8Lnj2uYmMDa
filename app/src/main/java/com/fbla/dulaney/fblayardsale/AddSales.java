@@ -9,9 +9,7 @@
 package com.fbla.dulaney.fblayardsale;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -24,31 +22,21 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fbla.dulaney.fblayardsale.controller.MySalesController;
 import com.fbla.dulaney.fblayardsale.databinding.ActivityAddsalesBinding;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.UUID;
 
 import com.fbla.dulaney.fblayardsale.model.*;
-import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
-
-import static java.lang.Float.parseFloat;
 
 public class AddSales extends AppCompatActivity implements View.OnClickListener {
     ActivityAddsalesBinding mBinding;
-    String pressed;
-    String mClicked;
 
     private MobileServiceTable<SaleItem> mSaleItemTable;
 
@@ -78,11 +66,41 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.gallery:
+                // Ask for permission first
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                        // Should we show an explanation?
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            // Explain to the user why we need to read the contacts
+                        } else {
+                            ActivityCompat.requestPermissions(this,
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                        }
+                        return;
+                    }
+                }
+
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 Log.d("CameraFragment", "Starting GALLERY Intent");
                 this.startActivityForResult(i, 1);
                 break;
             case R.id.camera:
+                // Ask for permission first
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                        // Should we show an explanation?
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                            // Explain to the user why we need to read the contacts
+                        } else {
+                            ActivityCompat.requestPermissions(this,
+                                    new String[]{Manifest.permission.CAMERA}, 0);
+                        }
+                        return;
+                    }
+                }
+
                 Intent j = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 this.startActivityForResult(j, 2);
                 break;
@@ -154,19 +172,6 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
             if (requestCode == 2 && data != null) { // From Camera
                 Log.d("AddSales", "Result from Camera");
 
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                        // Should we show an explanation?
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                            // Explain to the user why we need to read the contacts
-                        } else {
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-                        }
-                    }
-                }
-
                 try {
                     Bundle extras = data.getExtras();
                     Bitmap image = (Bitmap) extras.get("data");
@@ -179,19 +184,6 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
             {
                 // Gallery
                 Log.d("AddSales", "Result from Gallery");
-
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                        // Should we show an explanation?
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                            // Explain to the user why we need to read the contacts
-                        } else {
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-                        }
-                    }
-                }
 
                 try {
                     Uri pickedImage = data.getData();

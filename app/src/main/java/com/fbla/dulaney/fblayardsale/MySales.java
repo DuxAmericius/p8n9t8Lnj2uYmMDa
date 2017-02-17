@@ -1,3 +1,12 @@
+/* MySales.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This activity lists all of the items you have for sale. It allows
+   you to delete any item, or look at their comments.
+*/
 package com.fbla.dulaney.fblayardsale;
 
 import android.content.Intent;

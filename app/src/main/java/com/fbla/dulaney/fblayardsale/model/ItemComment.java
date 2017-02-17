@@ -1,8 +1,12 @@
+/* ItemComment.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: Model of the Azure database table for item comment information.
+*/
 package com.fbla.dulaney.fblayardsale.model;
-
-/**
- * Created by josh on 2/16/2017.
- */
 
 public class ItemComment {
     /*

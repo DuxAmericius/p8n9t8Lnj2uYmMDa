@@ -21,7 +21,6 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 
-import com.fbla.dulaney.fblayardsale.model.*;
 import com.fbla.dulaney.fblayardsale.model.Account;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -63,9 +62,6 @@ public class FblaLogon extends AsyncTask {
             Log.d("FblaLogon:init", e.toString());
             mClient = null;
         }
-
-        // DEBUG
-        //setCache(mContext, null, null);
     }
 
     @Override

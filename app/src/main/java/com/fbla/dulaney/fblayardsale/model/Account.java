@@ -1,9 +1,12 @@
+/* Account.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: Model of the Azure database table for user account information.
+*/
 package com.fbla.dulaney.fblayardsale.model;
-
-/**
- * Created by josh on 2/14/2017.
-
- */
 
 public class Account {
     /*

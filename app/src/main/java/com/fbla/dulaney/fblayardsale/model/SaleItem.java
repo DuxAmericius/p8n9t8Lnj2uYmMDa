@@ -1,12 +1,16 @@
+/* SaleItem.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: Model of the Azure database table for sale item information.
+*/
 package com.fbla.dulaney.fblayardsale.model;
 
 import android.graphics.Bitmap;
 
 import com.fbla.dulaney.fblayardsale.FblaPicture;
-
-/**
- * Created by josh on 2/12/2017.
- */
 
 public class SaleItem {
     /*

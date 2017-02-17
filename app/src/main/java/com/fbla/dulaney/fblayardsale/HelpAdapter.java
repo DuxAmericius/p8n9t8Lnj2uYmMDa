@@ -1,3 +1,11 @@
+/* HelpAdapter.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This is the recycler view adapter for the Help activity.
+*/
 package com.fbla.dulaney.fblayardsale;
 
 import android.support.v7.widget.RecyclerView;

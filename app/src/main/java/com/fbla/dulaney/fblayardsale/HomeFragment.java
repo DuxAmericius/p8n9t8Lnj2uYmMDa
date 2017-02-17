@@ -1,3 +1,13 @@
+/* HomeFragment.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This is the first fragment loaded on YardSaleMain. It shows the
+   application icon and is used like a menu. Buttons take you other activities.
+   You can also swipe left to get to the Local Sales fragment.
+*/
 package com.fbla.dulaney.fblayardsale;
 
 import android.content.Context;
@@ -106,19 +116,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    //@Override
-    //public void onViewCreated(View view, Bundle savedInstanceState) {
-    //    super.onViewCreated(view, savedInstanceState);
-    //    mBinding = DataBindingUtil.bind(view);
-    //    mBinding.add.setOnClickListener(this);
-    //}
-
     // Initializes layout items
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         mParent = getActivity();
     }
-
 
 }

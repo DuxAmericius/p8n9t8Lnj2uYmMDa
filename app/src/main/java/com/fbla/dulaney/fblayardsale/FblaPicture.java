@@ -1,3 +1,12 @@
+/* FblaPicture.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This class contains a bunch of helper methods that make it easy to
+   manage pictures.
+*/
 package com.fbla.dulaney.fblayardsale;
 
 import android.content.Context;
@@ -14,10 +23,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.io.ByteArrayOutputStream;
-
-/**
- * Created by josh on 2/15/2017.
- */
 
 public class FblaPicture {
     private static LinearLayout mLayoutImage;

@@ -43,6 +43,7 @@ public class CommentListController {
         else return null;
     }
 
+    // Add a comment and notify the adapter of the change
     public static void addComment(ItemComment comment) {
         mComments.add(comment);
         for (RecyclerView.Adapter adapter : mAdapters) {
@@ -50,6 +51,7 @@ public class CommentListController {
         }
     }
 
+    // Remove a comment and notify the adapter of the change
     public static void removeComment(int position) {
         mComments.remove(position);
         for (RecyclerView.Adapter adapter : mAdapters) {
@@ -60,6 +62,7 @@ public class CommentListController {
     public static SaleItem getItem() { return mItem; }
     public static void setItem(SaleItem item) { mItem = item; }
 
+    // Refresh all comments and notify the adapter of the change
     public static void Refresh() {
         if (!FblaLogon.getLoggedOn()) return;
         mComments.clear();

@@ -1,9 +1,16 @@
+/* Comments.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This activity allows you to both add new comments, review existing
+   comments posted on a sale item, and delete comments.
+*/
 package com.fbla.dulaney.fblayardsale;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,13 +18,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 
 import com.fbla.dulaney.fblayardsale.controller.CommentListController;
-import com.fbla.dulaney.fblayardsale.controller.MySalesController;
 import com.fbla.dulaney.fblayardsale.databinding.ActivityCommentsBinding;
 import com.fbla.dulaney.fblayardsale.model.ItemComment;
-import com.fbla.dulaney.fblayardsale.model.SaleItem;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.util.UUID;

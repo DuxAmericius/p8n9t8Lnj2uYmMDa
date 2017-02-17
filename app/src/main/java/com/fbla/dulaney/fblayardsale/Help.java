@@ -1,12 +1,19 @@
+/* Help.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This activity displays all of the help information using a
+   recycler view.
+*/
 package com.fbla.dulaney.fblayardsale;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 
 import com.fbla.dulaney.fblayardsale.databinding.ActivityHelpBinding;
 

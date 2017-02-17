@@ -1,18 +1,23 @@
+/* CommentsAdapter.java
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+   Purpose: This adapter is used by the Comments activity to manage the list of
+   comments. It makes use of the CommentListController.
+*/
 package com.fbla.dulaney.fblayardsale;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.fbla.dulaney.fblayardsale.controller.CommentListController;
