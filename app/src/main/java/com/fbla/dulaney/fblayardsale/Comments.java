@@ -51,15 +51,10 @@ public class Comments extends AppCompatActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-            case R.id.comments:
-                this.finish();
-                break;
             case R.id.post:
                 if (!mBinding.newcomment.getText().toString().equals("")) {
                     addItem(v);
                 }
-                //this.finish();
                 break;
             default:
                 break;

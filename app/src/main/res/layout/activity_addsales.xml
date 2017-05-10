@@ -42,18 +42,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
+            android:layout_marginLeft="4dp"
             android:text="Item Name:"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
+            android:inputType="text"
             android:id="@+id/editname"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
+            android:layout_marginLeft="4dp"
             android:text="Item Price:"/>
 
         <EditText
@@ -67,18 +70,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
+            android:layout_marginLeft="4dp"
             android:text="Item Description:"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
+            android:inputType="text"
             android:id="@+id/editdesc"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="4dp"
             android:text="Upload Picture:"/>
 
         <LinearLayout
@@ -91,14 +98,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Gallery"
+                android:background="#ffffff"
                 android:id="@+id/gallery"/>
 
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#6CA0D7"/>
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Camera"
+                android:background="#ffffff"
                 android:id="@+id/camera"/>
 
         </LinearLayout>
@@ -119,20 +132,33 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Back"
+                android:background="#ffffff"
                 android:id="@+id/back"/>
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#6CA0D7"/>
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Finish"
+                android:background="#ffffff"
                 android:id="@+id/finish"/>
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#6CA0D7"/>
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Add Another"
+                android:background="#ffffff"
                 android:id="@+id/another"/>
 
         </LinearLayout>

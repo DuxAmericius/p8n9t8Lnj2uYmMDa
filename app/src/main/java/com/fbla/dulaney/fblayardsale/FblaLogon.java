@@ -9,6 +9,20 @@
    the user's Account information. It's done with the logon to make sure communication
    with the Azure server is working. This class extends AsyncTask because almost all
    of the login processes must be done in the background.
+
+   Users must create or use a Google+ account. Even though users must agree to
+   grant access to their email, the only piece of information about the Google+
+   account that is stored in the database is Google's unique ID string, which
+   looks like this: sid:fb96bd335c1fba115e191a4526df5353
+   Also, when using the Google+ provider, we have to continually clear cookies
+   because the token caching interferes with our ability to logoff.
+
+   The first time a user logs in, a new row is inserted into the Account table.
+   The user's Account object and corresponding Schools object are stored as static
+   variables in this class so that they are available to all activities and fragments
+   in this mobile app. In addition, this class also stores the client object for
+   Azure as a static variable, also to make is easily available to all activities
+   and fragments in this mobile app.
 */
 
 package com.fbla.dulaney.fblayardsale;
@@ -22,10 +36,9 @@ import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 
 import com.fbla.dulaney.fblayardsale.model.Account;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
+import com.fbla.dulaney.fblayardsale.model.Schools;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.MobileServiceException;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceAuthenticationProvider;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
@@ -36,6 +49,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public class FblaLogon extends AsyncTask {
     final public static String AZUREURL = "https://fbla-yardsale.azurewebsites.net";
@@ -46,6 +60,7 @@ public class FblaLogon extends AsyncTask {
     private static MobileServiceClient mClient = null;
     private static Account mAccount = null;
     private static MobileServiceTable<Account> mAccountTable = null;
+    private static MobileServiceTable<Schools> mSchoolsTable = null;
 
     private Context mContext;
     private ArrayList<LogonResultListener> mListeners = new ArrayList<LogonResultListener>();
@@ -66,13 +81,15 @@ public class FblaLogon extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] params) {
-        doLogon();
-        return null;
+        Object result = doLogon();
+        return result;
     }
 
     @Override
     protected void onPostExecute(Object result) {
-
+        clearCookies();
+        if (result == null) onLogonSuccess();
+        else onLogonFailure((Exception)result);
     }
 
     public static boolean getLoggedOn() {
@@ -84,6 +101,7 @@ public class FblaLogon extends AsyncTask {
         setCache(mContext, null, null);
         mAccountTable = null;
         mAccount = null;
+        Log.d("FblaLogon:Logoff", "Logged Off");
     }
 
     public static MobileServiceClient getClient() {
@@ -98,17 +116,29 @@ public class FblaLogon extends AsyncTask {
         return mAccount;
     }
 
-    public static void setAccount(Account account) {
-        mAccount = account;
+    public static void setAccount(Account account) { mAccount = account; }
+
+    public static int getSearchMiles(Context context) {
+        if (context == null) return 5;
+        SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        if (prefs == null) return 5;
+        return prefs.getInt("miles", 5);
+    }
+
+    public static void setSearchMiles(Context context, int miles) {
+        SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("miles", miles);
+        editor.commit();
     }
 
     // Once all of the logon processes are complete, notify any listeners
     private void onLogonSuccess() {
         mLoggedOn = true;
+        Log.d("FblaLogon", "onLogonSuccess");
         for (LogonResultListener listener : mListeners) {
             listener.onLogonComplete(null);
         }
-        Log.d("FblaLogon", "onLogonSuccess");
     }
 
     // Notify any listeners that the logon has failed.
@@ -119,80 +149,109 @@ public class FblaLogon extends AsyncTask {
         Log.d("FblaLogon", "onLogonFailure");
     }
 
-    // This starts the whole logon chain of asynchronous calls.
-    // So many things can happen in callbacks that I have to chain them all together.
-    private void doLogon() {
-        if (mClient == null) return;
+    // This starts the whole logon process.
+    private Object doLogon() {
+        if (mClient == null) return new Exception("Client Not Initialized");
         getCache(mContext);
         if (mUserId == null || mToken == null || isTokenExpired(mToken)) {
             // Missing or expired token, so need to kick off the Google+ logon process.
-            googleLogon();
+            return googleLogon();
         } else {
             // The cached token seems to be good, so load the account with it.
-            loadAccount();
+            MobileServiceUser user = new MobileServiceUser(mUserId);
+            user.setAuthenticationToken(mToken);
+            mClient.setCurrentUser(user);
+            return loadAccount();
         }
     }
 
-    // This is the last part of the chain of asynchronous calls.
-    // A successfully loaded account means the token actually works and we can talk to Azure.
-    // So the callback from this one will call either onLogonSuccess or onLogonFailure.
-    private void loadAccount() {
-        MobileServiceUser user = new MobileServiceUser(mUserId);
-        user.setAuthenticationToken(mToken);
-        mClient.setCurrentUser(user);
+    // It seems to use WebKit to perform the Google+ OAuth authentication via Azure.
+    // If successful, load the Account.  Otherwise return an exception to notify
+    // the listeners that it didn't work.
+    private Object googleLogon() {
+        try {
+            MobileServiceUser mobileServiceUser = mClient.login(MobileServiceAuthenticationProvider.Google).get();
+            Log.d("FblaLogon:login", "Logged On");
+            setCache(mContext, mobileServiceUser.getUserId(), mobileServiceUser.getAuthenticationToken());
+            return loadAccount();
+        } catch (Exception ex) {
+            Log.d("FblaLogon:login", ex.toString());
+            return ex;
+        }
+    }
 
+    // A successfully loaded account means the token actually works and we can talk to Azure.
+    // Some accounts may not be linked to a School.
+    private Object loadAccount() {
+        // Now load the account
         mAccountTable = mClient.getTable(Account.class);
-        ListenableFuture<Account> account = mAccountTable.lookUp(mUserId);
-        Futures.addCallback(account, new FutureCallback<Account>() {
-            @Override
-            public void onFailure(Throwable exc) {
-                // See what kind of exception it is
-                if (exc.getMessage().equals("{\"error\":\"The item does not exist\"}")) {
+        try {
+            Account account = mAccountTable.lookUp(mUserId).get();
+            // Found the account record, so set it on the Data object.
+            Log.d("FblaLogon:account", "onSuccess - " + account.getId());
+            setAccount(account);
+            return loadSchool();
+        } catch (ExecutionException e) {
+            if (e.getCause().getClass() == MobileServiceException.class) {
+                MobileServiceException mEx = (MobileServiceException) e.getCause();
+                if (mEx.getResponse() != null && mEx.getResponse().getStatus().code == 404) { // Not Found
                     // The user is not in the table, so insert a new record for them.
                     Account act = new Account();
                     act.setId(mUserId);
                     mAccountTable.insert(act);
                     setAccount(act);
                     Log.d("FblaLogon:account", "AccountEdit Created");
-                    onLogonSuccess();
+                    return loadSchool();
                 } else {
-                    // Something else bad happened.
-                    Log.d("FblaLogon:account", exc.toString());
-                    onLogonFailure((Exception)exc);
+                    Log.d("FblaLogon:account", mEx.toString());
+                    return mEx;
                 }
+            } else {
+                Log.d("FblaLogon:account", e.toString());
+                return e;
             }
-
-            @Override
-            public void onSuccess(Account result) {
-                // Found the account record, so set it on the Data object.
-                Log.d("FblaLogon:account", "onSuccess - "+result.getId());
-                setAccount(result);
-                clearCookies();
-                onLogonSuccess();
-            }
-        });
+        } catch (Exception ex) {
+            // Something else bad happened.
+            Log.d("FblaLogon:account", ex.toString());
+            return ex;
+        }
     }
 
-    // This is the longest chain of asynchronous processes.
-    // It seems to use WebKit to perform the Google+ OAuth authentication via Azure.
-    // If successful, chain it to loading Accounts.  Otherwise call onLogonFailure to notify
-    // the listeners that it didn't work.
-    private void googleLogon() {
-        ListenableFuture<MobileServiceUser> mLogin = mClient.login(MobileServiceAuthenticationProvider.Google);
-        Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {
-            @Override
-            public void onSuccess(MobileServiceUser mobileServiceUser) {
-                Log.d("FblaLogon:login", "Logged On");
-                setCache(mContext, mobileServiceUser.getUserId(), mobileServiceUser.getAuthenticationToken());
-                loadAccount();
+    // Load the school, if the Account is linked to one.
+    // Return a null if everything is successful. Otherwise return an Exception.
+    private Object loadSchool() {
+        if (mAccount.getSchoolId() != null && mAccount.getSchool() == null) {
+            Log.d("FblaLogin:school", "School " + mAccount.getSchoolId());
+            mSchoolsTable = mClient.getTable(Schools.class);
+            try {
+                Schools school = mSchoolsTable.lookUp(mAccount.getSchoolId()).get();
+                // Found the account record, so set it on the Data object.
+                Log.d("FblaLogon:school", "onSuccess - "+school.getId());
+                mAccount.setSchool(school);
+                return null;
+            } catch (ExecutionException e) {
+                if (e.getCause().getClass() == MobileServiceException.class) {
+                    MobileServiceException mEx = (MobileServiceException) e.getCause();
+                    if (mEx.getResponse() != null && mEx.getResponse().getStatus().code == 404) { // Not Found
+                        Log.d("FblaLogon:school", "School Missing");
+                        return null;
+                    } else {
+                        Log.d("FblaLogon:school", mEx.toString());
+                        return mEx;
+                    }
+                } else {
+                    Log.d("FblaLogon:school", e.toString());
+                    return e;
+                }
+            } catch (Exception ex) {
+                // Something else bad happened.
+                Log.d("FblaLogon:school", ex.toString());
+                return ex;
             }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.d("FblaLogon:login", throwable.toString());
-                onLogonFailure((Exception)throwable);
-            }
-        });
+        } else {
+            Log.d("FblaLogin:school", "No School");
+            return null;
+        }
     }
 
     private void clearCookies() {

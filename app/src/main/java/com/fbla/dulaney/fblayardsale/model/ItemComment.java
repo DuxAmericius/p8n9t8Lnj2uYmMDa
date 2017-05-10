@@ -5,36 +5,28 @@
                       Mobile Application Development 2016-17
    =============================================================================
    Purpose: Model of the Azure database table for item comment information.
+   This class is used by the Azure library to query and create data in the
+   ItemComment database table.
+
+   The link to the Account table is also represented by holding a copy of
+   the whole Account object.
 */
 package com.fbla.dulaney.fblayardsale.model;
 
 public class ItemComment {
-    /*
-    Item Id
-     */
+    // Database Columns
     @com.google.gson.annotations.SerializedName("id")
-    private String mId;
-
-    /*
-    User Id
-     */
+    private String mId; // Unique id assigned by the database.
     @com.google.gson.annotations.SerializedName("userid")
-    private String mUserId;
-
-    /*
-    Item Id
-     */
+    private String mUserId; // Foreign key to the Account
     @com.google.gson.annotations.SerializedName("itemid")
-    private String mItemId;
-
-    /*
-    Comment
-     */
+    private String mItemId; // Foreign key to the SaleItem
     @com.google.gson.annotations.SerializedName("comment")
-    private String mComment;
+    private String mComment; // This is the actual comment text
 
+    // Transient fields will not get queried or saved to the database
     @com.google.gson.annotations.Expose(serialize = false)
-    private Account mAccount;
+    private transient Account mAccount; // Needed to display the username
 
     public ItemComment() {
         mAccount = null;

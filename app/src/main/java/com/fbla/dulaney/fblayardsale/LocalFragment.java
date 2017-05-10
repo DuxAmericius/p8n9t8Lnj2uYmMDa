@@ -5,8 +5,13 @@
                       Mobile Application Development 2016-17
    =============================================================================
    Purpose: This is the second fragment loaded on YardSaleMain. It will display
-   all sale items that are in your same zip code, excluding any of your own
-   sale items. You can also swipe right to get to the Home fragment.
+   all sale items that are within either 5 or 10 miles of your school,
+   excluding any of your own sale items.
+
+   Those sale items are loaded from the LocalController.
+
+   You can swipe right to get to the Home fragment.
+   You can swipe left to get to the Map fragment.
 */
 package com.fbla.dulaney.fblayardsale;
 
@@ -27,7 +32,6 @@ import com.fbla.dulaney.fblayardsale.databinding.FragmentLocalBinding;
 public class LocalFragment extends Fragment implements View.OnClickListener {
 
     private LocalFragment.OnFragmentInteractionListener mListener;
-    private FragmentActivity mParent;
     FragmentLocalBinding mBinding;
 
     @Override
@@ -41,8 +45,14 @@ public class LocalFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void setEnabled(boolean enable) {
+        if (mBinding != null)
+            mBinding.fragmentLocal.setEnabled(enable);
+    }
+
     public interface OnFragmentInteractionListener {
-        public void onLocalInteraction(View v);
+        public void onLocalAttach(LocalFragment f);
+        public void onLocalDetach(LocalFragment f);
     }
 
     // Implementation of Fragment
@@ -62,6 +72,7 @@ public class LocalFragment extends Fragment implements View.OnClickListener {
         super.onAttach(context);
         try {
             mListener = (LocalFragment.OnFragmentInteractionListener) context;
+            mListener.onLocalAttach(this);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -71,6 +82,7 @@ public class LocalFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener.onLocalDetach(this);
         mListener = null;
     }
 
@@ -84,7 +96,6 @@ public class LocalFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_local, container, false);
-        //mBinding.comments.setOnClickListener(this);
         View view = mBinding.getRoot();
         return view;
     }
@@ -93,10 +104,11 @@ public class LocalFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         // Setup the RecyclerView here because the data changes.
+        FragmentActivity mParent = getActivity();
         mBinding.list.setLayoutManager(new LinearLayoutManager(mParent));
         LocalAdapter adapter = new LocalAdapter(this);
         LocalController.AttachAdapter(adapter);
-        LocalController.Refresh();
+        LocalController.Refresh(mParent);
         mBinding.list.setAdapter(adapter);
     }
 

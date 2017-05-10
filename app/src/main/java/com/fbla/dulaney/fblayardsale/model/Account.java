@@ -5,60 +5,32 @@
                       Mobile Application Development 2016-17
    =============================================================================
    Purpose: Model of the Azure database table for user account information.
+   This class is used by the Azure library to query and create data in the
+   Account database table.
+
+   The link to the Schools table is also represented by holding a copy of
+   the whole Schools object.
 */
 package com.fbla.dulaney.fblayardsale.model;
 
 public class Account {
-    /*
-    User Id
-     */
+    // Database Columns
     @com.google.gson.annotations.SerializedName("id")
-    private String mId;
-
-    /*
-    User Name
-     */
+    private String mId; // Unique id for the user, as provided by the Google+ logon
     @com.google.gson.annotations.SerializedName("name")
-    private String mName;
+    private String mName; // Your username
+    @com.google.gson.annotations.SerializedName("schoolid")
+    private String mSchoolId; // Foreign key to the selected school.
 
-    /*
-    State
-     */
-    @com.google.gson.annotations.SerializedName("state")
-    private String mState;
-
-    /*
-    Region
-     */
-    @com.google.gson.annotations.SerializedName("region")
-    private String mRegion;
-
-    /*
-    FBLA Chapter
-     */
-    @com.google.gson.annotations.SerializedName("chapter")
-    private String mChapter;
-
-    /*
-    Address
-     */
-    @com.google.gson.annotations.SerializedName("address")
-    private String mAddress;
-
-    /*
-    Zip Code
-     */
-    @com.google.gson.annotations.SerializedName("zipcode")
-    private String mZipCode;
+    // Transient fields will not get queried or saved to the database
+    @com.google.gson.annotations.Expose(serialize = false)
+    private transient Schools mSchool;
 
     public Account() {
         mId = "";
         mName = "";
-        mAddress = "";
-        mChapter = "";
-        mRegion = "";
-        mState = "";
-        mZipCode = "";
+        mSchoolId = null;
+        mSchool = null;
     }
 
     @Override
@@ -71,16 +43,14 @@ public class Account {
     public final void setId(String id) { mId = id; }
     public String getName() { return mName; }
     public final void setName(String name) { mName = name; }
-    public String getState() { return mState; }
-    public final void setState(String state) { mState = state; }
-    public String getRegion() { return mRegion; }
-    public final void setRegion(String region) { mRegion = region; }
-    public String getChapter() { return mChapter; }
-    public final void setChapter(String chapter) { mChapter = chapter; }
-    public String getAddress() { return mAddress; }
-    public final void setAddress(String address) { mAddress = address; }
-    public String getZipCode() { return mZipCode; }
-    public final void setZipCode(String zipCode) { mZipCode = zipCode; }
+    public String getSchoolId() { return mSchoolId; }
+
+    public Schools getSchool() { return mSchool; }
+    public final void setSchool(Schools school) {
+        mSchool = school;
+        if (school == null) mSchoolId = null;
+        else mSchoolId = school.getId();
+    }
 
     @Override
     public boolean equals(Object o) {

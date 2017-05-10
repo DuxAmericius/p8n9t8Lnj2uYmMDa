@@ -51,38 +51,47 @@
                 android:gravity="left"
                 android:layout_margin="10dp"
                 android:textSize="20sp"/>
-				
-			<TextView
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="3. Edit desired information about item"
+                android:text="3. Enter required information (Item Name and Item Price)"
                 android:textColor="#ffffff"
                 android:gravity="left"
                 android:layout_margin="10dp"
                 android:textSize="20sp"/>
-				
-			<TextView
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="4. Press &quot;Finish&quot; to upload item and close activity"
+                android:text="4. Enter optional information (Item Description and Picture from Camera or Gallery)"
                 android:textColor="#ffffff"
                 android:gravity="left"
                 android:layout_margin="10dp"
                 android:textSize="20sp"/>
-				
-			<TextView
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="5. OR press &quot;Add Another&quot; to upload item and restart activity"
+                android:text="5. Press &quot;Finish&quot; to upload item and close activity"
                 android:textColor="#ffffff"
                 android:gravity="left"
                 android:layout_margin="10dp"
                 android:textSize="20sp"/>
-				
-			<TextView
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="6. OR press &quot;Cancel&quot; to not upload item and close activity"
+                android:text="6. OR press &quot;Add Another&quot; to upload item and restart activity"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="7. OR press &quot;Cancel&quot; to not upload item and close activity"
                 android:textColor="#ffffff"
                 android:gravity="left"
                 android:layout_margin="10dp"

@@ -9,56 +9,78 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-<LinearLayout
-    android:orientation="vertical"
-    android:id="@+id/fragment_home"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    android:background="#6CA0D7"
-    tools:context="com.fbla.dulaney.fblayardsale.YardSaleMain">
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/fragment_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:background="#6CA0D7"
+        tools:context="com.fbla.dulaney.fblayardsale.YardSaleMain">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="4dp"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher"
-        android:id="@+id/image"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Account"
-        android:id="@+id/account"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Add a Sale"
-        android:id="@+id/add"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="My Sales"
-        android:id="@+id/my"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Help"
-        android:id="@+id/help"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Log Out"
-        android:id="@+id/logout"/>
-</LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/image"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:text="Account"
+            android:id="@+id/account"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="#6CA0D7"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:text="Add a Sale"
+            android:id="@+id/add"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="#6CA0D7"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:text="My Sales"
+            android:id="@+id/my"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="#6CA0D7"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:text="Help"
+            android:id="@+id/help"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="#6CA0D7"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:text="Log Out"
+            android:id="@+id/logout"/>
+    </LinearLayout>
 
 </layout>
+

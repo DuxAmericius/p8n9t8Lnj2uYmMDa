@@ -7,6 +7,11 @@
    Purpose: Used by MySalesFragment to control access to the list of Sale Items owned
    by the user. Attaching a recycler view to the class so that when the list of
    items is refreshed or changed, the recycler view is notified of that change.
+
+   Items are fetched from the SaleItem table. Then for each item, the number of
+   comments are counted from the ItemComment table in order to display it on
+   the comments button.
+
 */
 package com.fbla.dulaney.fblayardsale.controller;
 
@@ -15,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.fbla.dulaney.fblayardsale.FblaLogon;
+import com.fbla.dulaney.fblayardsale.model.ItemComment;
 import com.fbla.dulaney.fblayardsale.model.SaleItem;
 import com.microsoft.windowsazure.mobileservices.MobileServiceList;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
@@ -53,29 +59,44 @@ public class MySalesController {
     }
 
     private static MobileServiceTable<SaleItem> mSaleItemTable;
+    private static MobileServiceTable<ItemComment> mItemCommentTable;
     public static void Refresh() {
+        Log.d("MySalesController", "Refresh");
         if (!FblaLogon.getLoggedOn()) return;
         mSaleItems.clear();
 
         mSaleItemTable = FblaLogon.getClient().getTable(SaleItem.class);
-        new AsyncTask<Void, Void, Void>() {
+        mItemCommentTable = FblaLogon.getClient().getTable(ItemComment.class);
+        new AsyncTask<Object, Object, Object>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Object doInBackground(Object... params) {
                 try {
+                    ArrayList<SaleItem> saleItems = new ArrayList<>();
                     final MobileServiceList<SaleItem> result =
                             mSaleItemTable.where().field("userid").eq(FblaLogon.getUserId()).execute().get();
-                    for (SaleItem item : result) {
-                        mSaleItems.add(item);
+                    for (SaleItem s : result) {
+                        final MobileServiceList<ItemComment> cnt =
+                                mItemCommentTable.where().field("itemid").eq(s.getId()).includeInlineCount().execute().get();
+                        s.setNumComments(cnt.getTotalCount());
+                        saleItems.add(s);
                     }
+                    return saleItems;
                 } catch (Exception exception) {
                     Log.e("MySalesController", exception.toString());
+                    return null;
                 }
-                return null;
             }
             @Override
-            protected void onPostExecute(Void v) {
-                for (RecyclerView.Adapter adapter : mAdapters) {
-                    adapter.notifyDataSetChanged();
+            protected void onPostExecute(Object result) {
+                if (result != null) {
+                    for (SaleItem item : (ArrayList<SaleItem>)result) {
+                        item.setAccount(FblaLogon.getAccount());
+                        mSaleItems.add(item);
+                    }
+                    Log.d("MySalesController", "Set Notify");
+                    for (RecyclerView.Adapter adapter : mAdapters) {
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
         }.execute();

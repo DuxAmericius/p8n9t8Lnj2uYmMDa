@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- help10_numbersales.xml
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/help05_addsales"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true"
+        android:background="#ffffff">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#6CA0D7">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="How to View Number of Sales for a School:"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:textSize="24sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to Map page"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2. Press desired school's icon"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

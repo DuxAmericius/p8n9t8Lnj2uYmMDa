@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- google_maps_api.xml
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+-->
+<resources>
+  <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDkAPvGz-FFJd_COPjJoWJvWlHw4dpQObk</string>
+</resources>

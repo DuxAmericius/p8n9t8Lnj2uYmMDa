@@ -63,7 +63,11 @@ public class HelpAdapter  extends RecyclerView.Adapter<HelpAdapter.ViewHolder> {
                 break;
             case 9:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.help10_logout, parent, false);
+                        .inflate(R.layout.help10_numbersales, parent, false);
+                break;
+            case 10:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.help11_logout, parent, false);
                 break;
             default:
                 v = null;
@@ -80,7 +84,7 @@ public class HelpAdapter  extends RecyclerView.Adapter<HelpAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 10;
+        return 11;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

@@ -5,6 +5,12 @@
                       Mobile Application Development 2016-17
    =============================================================================
    Purpose: This activity is used to add a new sale item.
+
+   Both Name and Price are required for an item. This is enforced by only enabling
+   the Save button when both have data.
+
+   This activity also interacts with the phone's photo gallery and camera in order
+   to include a picture of the item.
 */
 package com.fbla.dulaney.fblayardsale;
 
@@ -22,6 +28,8 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -60,12 +68,58 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
         mBinding.back.setOnClickListener(this);
         mBinding.finish.setOnClickListener(this);
         mBinding.another.setOnClickListener(this);
+
+        mBinding.finish.setEnabled(false);
+        mBinding.another.setEnabled(false);
+
+        // Make sure Name is required.
+        mBinding.editname.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0 && mBinding.editprice.getText().length() > 0) {
+                    mBinding.finish.setEnabled(true);
+                    mBinding.another.setEnabled(true);
+                } else {
+                    mBinding.finish.setEnabled(false);
+                    mBinding.another.setEnabled(false);
+                }
+            }
+        });
+
+        // Make sure Price is required.
+        mBinding.editprice.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0 && mBinding.editname.getText().length() > 0) {
+                    mBinding.finish.setEnabled(true);
+                    mBinding.another.setEnabled(true);
+                } else {
+                    mBinding.finish.setEnabled(false);
+                    mBinding.another.setEnabled(false);
+                }
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.gallery:
+                // Load a picture from the phone's gallery
                 // Ask for permission first
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -86,6 +140,7 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
                 this.startActivityForResult(i, 1);
                 break;
             case R.id.camera:
+                // Take a picture from the camera.
                 // Ask for permission first
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
@@ -105,15 +160,18 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
                 this.startActivityForResult(j, 2);
                 break;
             case R.id.another:
+                // Save the current item, and reload the activity to be ready for another one.
                 addItem(v);
                 this.finish();
                 this.startActivity(new Intent(this, AddSales.class));
                 break;
             case R.id.finish:
+                // Save the current item and return to YardSaleMain.
                 addItem(v);
                 this.finish();
                 break;
             default:
+                // Don't save anything, just return to YardSaleMain.
                 this.finish();
                 break;
         }
@@ -133,7 +191,7 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
         final SaleItem item = new SaleItem();
         item.setId(UUID.randomUUID().toString());
         item.setName(mBinding.editname.getText().toString());
-        item.setUserId(FblaLogon.getUserId());
+        item.setAccount(FblaLogon.getAccount());
         item.setDescription(mBinding.editdesc.getText().toString());
         String sPrice = mBinding.editprice.getText().toString();
         if (sPrice == null || sPrice.equals("")) item.setPrice(0);

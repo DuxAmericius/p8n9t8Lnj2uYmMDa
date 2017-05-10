@@ -41,16 +41,26 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Home"
+            android:textColor="#ffffff"
             android:id="@+id/home"
-            android:background="#ffffff" />
+            android:background="#6CA0D7" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Local Sales"
+            android:textColor="#000000"
             android:id="@+id/local"
-            android:background="#ffffff" />
+            android:background="#BD2E37" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Map"
+            android:id="@+id/map"
+            android:background="#ffffff"/>
 
     </LinearLayout>
 

@@ -6,6 +6,8 @@
    =============================================================================
    Purpose: This adapter is used by the Comments activity to manage the list of
    comments. It makes use of the CommentListController.
+
+   When you delete a comment, it uses a popup window to ask if you are sure.
 */
 package com.fbla.dulaney.fblayardsale;
 

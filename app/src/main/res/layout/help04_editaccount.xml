@@ -51,43 +51,87 @@
                 android:gravity="left"
                 android:layout_margin="10dp"
                 android:textSize="20sp"/>
-				
-			<TextView
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="3. Edit desired information"
-                android:textColor="#ffffff"
-                android:gravity="left"
-                android:layout_margin="10dp"
-                android:textSize="20sp"/>
-				
-			<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="*IMPORTANT* ENTER YOUR ZIPCODE TO SEE ITEMS IN THE SAME ZIPCODE ON THE LOCAL SALES FRAGMENT"
-                android:textColor="#ffffff"
-                android:gravity="left"
-                android:layout_margin="10dp"
-                android:textSize="20sp"/>
-				
-			<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="4. Click &quot;Save&quot; to save data and close activity"
-                android:textColor="#ffffff"
-                android:gravity="left"
-                android:layout_margin="10dp"
-                android:textSize="20sp"/>
-				
-			<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="5. OR click &quot;Cancel&quot; to not save data and close activity"
+                android:text="3. Type in Name"
                 android:textColor="#ffffff"
                 android:gravity="left"
                 android:layout_margin="10dp"
                 android:textSize="20sp"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4. Type in zipcode"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5. OR Select state and type in city name"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="6. Select school if available"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="7. Choose either a 5 mile or 10 mile radius from school selected"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="7. Choose either a 5 mile or 10 mile radius from school selected"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="8. Click &quot;Save&quot; to save data and close activity"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="9. OR click &quot;Cancel&quot; to not save data and close activity"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="*IMPORTANT* SCHOOLS SHOWN IN LOCAL SALES AND ON THE MAP ARE WITHIN THE RADIUS FROM SELECTED SCHOOL"
+                android:textColor="#ffffff"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:textSize="20sp"/>
 
         </LinearLayout>
 

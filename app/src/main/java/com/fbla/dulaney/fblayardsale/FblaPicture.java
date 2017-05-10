@@ -6,6 +6,12 @@
    =============================================================================
    Purpose: This class contains a bunch of helper methods that make it easy to
    manage pictures.
+
+   It will automatically resize large pictures so they assume the scale of
+   your phone. This saves space when storing those pictures in the database.
+
+   It also has functions that convert Bitmaps to and from an encoded string.
+   The encoded string is saved in an Azure database table.
 */
 package com.fbla.dulaney.fblayardsale;
 

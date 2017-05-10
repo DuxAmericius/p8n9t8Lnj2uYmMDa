@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,7 @@ import com.fbla.dulaney.fblayardsale.databinding.FragmentHomeBinding;
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
-    private FragmentActivity mParent;
+    //private YardSaleMain mParent;
     FragmentHomeBinding mBinding;
 
     @Override
@@ -59,8 +58,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void setEnabled(boolean enable) {
+        if (mBinding != null)
+            mBinding.fragmentHome.setEnabled(enable);
+    }
+
     public interface OnFragmentInteractionListener {
-        public void onHomeInteraction(View v);
+        public void onHomeAttach(HomeFragment f);
+        public void onHomeDetach(HomeFragment f);
     }
 
     // Implementation of Fragment
@@ -80,6 +85,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         super.onAttach(context);
         try {
             mListener = (OnFragmentInteractionListener) context;
+            mListener.onHomeAttach(this);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -89,6 +95,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener.onHomeDetach(this);
         mListener = null;
     }
 
@@ -110,9 +117,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mBinding.logout.setOnClickListener(this);
         View view = mBinding.getRoot();
 
-        // Inflate the layout for this fragment
-        //View v = inflater.inflate(R.layout.fragment_home, container, false);
-        //mParent = getActivity();
         return view;
     }
 
@@ -120,7 +124,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        mParent = getActivity();
+        //mParent = (YardSaleMain)getActivity();
     }
 
 }

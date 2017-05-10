@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SpinnerLists.xml
+   =============================================================================
+                         Josh Talley and Daniel O'Donnell
+                                Dulaney High School
+                      Mobile Application Development 2016-17
+   =============================================================================
+-->
 <resources>
     <string-array name="states_list">
         <item></item>
         <item>Alabama</item>
         <item>Alaska</item>
+        <item>American Samoa</item>
         <item>Arizona</item>
         <item>Arkansas</item>
         <item>California</item>
         <item>Colorado</item>
         <item>Connecticut</item>
         <item>Delaware</item>
-        <item>District of Columbia</item>
+        <item>Dist. of Columbia</item>
         <item>Florida</item>
         <item>Georgia</item>
+        <item>Guam</item>
         <item>Hawaii</item>
         <item>Idaho</item>
         <item>Illinois</item>
@@ -22,9 +31,11 @@
         <item>Kentucky</item>
         <item>Louisiana</item>
         <item>Maine</item>
+        <item>Marshall Islands</item>
         <item>Maryland</item>
         <item>Massachusetts</item>
         <item>Michigan</item>
+        <item>Micronesia</item>
         <item>Minnesota</item>
         <item>Mississippi</item>
         <item>Missouri</item>
@@ -37,10 +48,13 @@
         <item>New York</item>
         <item>North Carolina</item>
         <item>North Dakota</item>
+        <item>Northern Marianas</item>
         <item>Ohio</item>
         <item>Oklahoma</item>
         <item>Oregon</item>
+        <item>Palau</item>
         <item>Pennsylvania</item>
+        <item>Puerto Rico</item>
         <item>Rhode Island</item>
         <item>South Carolina</item>
         <item>South Dakota</item>
@@ -48,15 +62,11 @@
         <item>Texas</item>
         <item>Utah</item>
         <item>Vermont</item>
+        <item>Virgin Islands</item>
         <item>Virginia</item>
         <item>Washington</item>
         <item>West Virginia</item>
         <item>Wisconsin</item>
         <item>Wyoming</item>
-        <item>American Samoa</item>
-        <item>Guam</item>
-        <item>Northern Mariana Islands</item>
-        <item>Puerto Rico</item>
-        <item>U.S. Virgin Islands</item>
     </string-array>
 </resources>

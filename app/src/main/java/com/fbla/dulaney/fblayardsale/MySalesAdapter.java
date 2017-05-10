@@ -44,7 +44,7 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
         mBinding.comments.setOnClickListener(this);
         mBinding.layoutAddress.setVisibility(View.GONE);
         mBinding.layoutChapter.setVisibility(View.GONE);
-        mBinding.layoutZipcode.setVisibility(View.GONE);
+        mBinding.layoutUser.setVisibility(View.GONE);
         View view = mBinding.getRoot();
 
         return new ViewHolder(view, mBinding);
@@ -61,6 +61,7 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
             mBinding.name.setText(item.getName());
             mBinding.price.setText(String.format("$%.2f", item.getPrice()));
             mBinding.description.setText(item.getDescription());
+            mBinding.comments.setText("COMMENTS (" + item.getNumComments() + ")");
             mBinding.sold.setTag(position);
             Bitmap image = item.getPicture();
             if (image != null) {

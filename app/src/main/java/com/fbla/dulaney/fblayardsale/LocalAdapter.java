@@ -5,6 +5,7 @@
                       Mobile Application Development 2016-17
    =============================================================================
    Purpose: This is the recycler view adapter for the Local fragment.
+   It basically loads items from the LocalController onto the layout for display.
 */
 package com.fbla.dulaney.fblayardsale;
 
@@ -21,6 +22,7 @@ import com.fbla.dulaney.fblayardsale.controller.LocalController;
 import com.fbla.dulaney.fblayardsale.databinding.ListItemsBinding;
 import com.fbla.dulaney.fblayardsale.model.Account;
 import com.fbla.dulaney.fblayardsale.model.SaleItem;
+import com.fbla.dulaney.fblayardsale.model.Schools;
 
 public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> implements View.OnClickListener {
     private View.OnClickListener mParentListener;
@@ -35,7 +37,7 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
         ListItemsBinding mBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()), R.layout.list_items, parent, false);
         mBinding.sold.setOnClickListener(this);
-        mBinding.sold.setVisibility(View.GONE); //this will be variable based on account info
+        mBinding.layoutSold.setVisibility(View.GONE);
         mBinding.comments.setOnClickListener(this);
         View view = mBinding.getRoot();
 
@@ -53,11 +55,15 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
             mBinding.name.setText(item.getName());
             mBinding.price.setText(String.format("$%.2f", item.getPrice()));
             mBinding.description.setText(item.getDescription());
+            mBinding.comments.setText("COMMENTS (" + item.getNumComments() + ")");
             Account account = item.getAccount();
             if (account != null) {
-                mBinding.address.setText(account.getAddress());
-                mBinding.chapter.setText(account.getChapter());
-                mBinding.zipcode.setText(account.getZipCode());
+                mBinding.user.setText(account.getName());
+                Schools school = account.getSchool();
+                if (school != null) {
+                    mBinding.address.setText(school.getFullAddress());
+                    mBinding.chapter.setText(school.getSchool());
+                }
             }
             Bitmap image = item.getPicture();
             if (image != null) {

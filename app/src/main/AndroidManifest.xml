@@ -1,56 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fbla.dulaney.fblayardsale">
+<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.fbla.dulaney.fblayardsale">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
+<uses-feature android:name="android.hardware.camera" android:required="true" />
 
-    <application
-        android:hardwareAccelerated="true"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".YardSaleMain"
-            android:label="FBLA Yard Sale"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<application android:hardwareAccelerated="true" android:allowBackup="true" android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name" android:supportsRtl="true" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+    <activity android:name=".YardSaleMain" android:label="FBLA Yard Sale" android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-        <activity android:name=".AccountEdit"
-            android:label="FBLA Yard Sale - Account"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".AddSales"
-            android:label="FBLA Yard Sale - Add Sales"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".Comments"
-            android:label="FBLA Yard Sale - Comments"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".MySales"
-            android:label="FBLA Yard Sale - My Sales"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".Help"
-            android:label="FBLA Yard Sale - Help"
-            android:screenOrientation="portrait">
-        </activity>
+    <activity android:name=".AccountEdit" android:label="FBLA Yard Sale - Account"
+        android:screenOrientation="portrait"></activity>
+    <activity android:name=".AddSales" android:label="FBLA Yard Sale - Add Sales"
+        android:screenOrientation="portrait"></activity>
+    <activity android:name=".Comments" android:label="FBLA Yard Sale - Comments"
+        android:screenOrientation="portrait"></activity>
+    <activity android:name=".MySales" android:label="FBLA Yard Sale - My Sales"
+        android:screenOrientation="portrait"></activity>
+    <activity android:name=".Help" android:label="FBLA Yard Sale - Help" android:screenOrientation="portrait"></activity>
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-    </application>
+    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+    <meta-data android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyDkAPvGz-FFJd_COPjJoWJvWlHw4dpQObk" />
+</application>
 
 </manifest>

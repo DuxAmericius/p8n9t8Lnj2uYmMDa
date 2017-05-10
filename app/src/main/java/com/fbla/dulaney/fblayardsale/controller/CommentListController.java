@@ -32,7 +32,6 @@ public class CommentListController {
     public static void AttachAdapter(RecyclerView.Adapter adapter) {
         mAdapters.add(adapter);
     }
-    public static void RemoveAdapter(RecyclerView.Adapter adapter) { mAdapters.remove(adapter); }
 
     public static int getCommentCount() {
         return mComments.size();
@@ -46,6 +45,7 @@ public class CommentListController {
     // Add a comment and notify the adapter of the change
     public static void addComment(ItemComment comment) {
         mComments.add(comment);
+        mItem.setNumComments(mItem.getNumComments()+1);
         for (RecyclerView.Adapter adapter : mAdapters) {
             adapter.notifyDataSetChanged();
         }
@@ -54,6 +54,7 @@ public class CommentListController {
     // Remove a comment and notify the adapter of the change
     public static void removeComment(int position) {
         mComments.remove(position);
+        mItem.setNumComments(mItem.getNumComments()-1);
         for (RecyclerView.Adapter adapter : mAdapters) {
             adapter.notifyDataSetChanged();
         }
@@ -69,26 +70,37 @@ public class CommentListController {
 
         mItemCommentTable = FblaLogon.getClient().getTable(ItemComment.class);
         final MobileServiceTable<Account> mAccountTable = FblaLogon.getClient().getTable(Account.class);
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Object, Object, Object>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Object doInBackground(Object... params) {
                 try {
+                    ArrayList<ItemComment> comments = new ArrayList<>();
                     final MobileServiceList<ItemComment> result =
                             mItemCommentTable.where().field("itemid").eq(mItem.getId()).execute().get();
                     for (ItemComment comment : result) {
                         Account account = mAccountTable.lookUp(comment.getUserId()).get();
                         comment.setAccount(account);
-                        mComments.add(comment);
+                        comments.add(comment);
                     }
+                    return comments;
                 } catch (Exception exception) {
                     Log.e("CommentListController", exception.toString());
                 }
                 return null;
             }
             @Override
-            protected void onPostExecute(Void v) {
-                for (RecyclerView.Adapter adapter : mAdapters) {
-                    adapter.notifyDataSetChanged();
+            protected void onPostExecute(Object result) {
+                // If there are results, copy them into the array and notify the adapter.
+                // This must be done on the UI thread.
+                if (result != null) {
+                    ArrayList<ItemComment> comments = (ArrayList<ItemComment>)result;
+                    for (ItemComment comment : comments) {
+                        mComments.add(comment);
+                    }
+                    mItem.setNumComments(comments.size());
+                    for (RecyclerView.Adapter adapter : mAdapters) {
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
         }.execute();
