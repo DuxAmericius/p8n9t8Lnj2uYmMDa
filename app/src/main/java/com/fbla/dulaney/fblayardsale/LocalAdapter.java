@@ -50,7 +50,6 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
         SaleItem item = LocalController.getItem(position);
         if (item != null) {
             mBinding = holder.getBinding();
-            Log.d("LocalAdapter", "onBindViewHolder");
             mBinding.comments.setTag(position);
             mBinding.name.setText(item.getName());
             mBinding.price.setText(String.format("$%.2f", item.getPrice()));

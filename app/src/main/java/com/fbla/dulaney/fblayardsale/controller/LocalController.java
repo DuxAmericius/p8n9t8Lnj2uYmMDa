@@ -27,6 +27,8 @@
 
    SchoolDistance -> Schools -> Account -> SaleItem -> ItemComment
 
+   Finally, for each SaleItem, we download a picture (if it has one) from Azure
+   storage, using FblaPicture.
 */
 package com.fbla.dulaney.fblayardsale.controller;
 
@@ -36,6 +38,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.fbla.dulaney.fblayardsale.FblaLogon;
+import com.fbla.dulaney.fblayardsale.FblaPicture;
 import com.fbla.dulaney.fblayardsale.model.Account;
 import com.fbla.dulaney.fblayardsale.model.ItemComment;
 import com.fbla.dulaney.fblayardsale.model.SaleItem;
@@ -133,6 +136,9 @@ public class LocalController {
                                         mSaleItemTable.where().field("userid").eq(account.getId()).execute().get();
                                 for (SaleItem item : items) {
                                     item.setAccount(account);
+                                    // Get its picture
+                                    if (item.getHasPicture())
+                                        item.setPicture(FblaPicture.DownloadImage(item.getId()));
                                     // Finally, count the number of comments that are on each item.
                                     final MobileServiceList<ItemComment> cnt =
                                             mItemCommentTable.where().field("itemid").eq(item.getId()).includeInlineCount().execute().get();

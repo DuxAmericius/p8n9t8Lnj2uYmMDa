@@ -40,7 +40,6 @@ Phone Application
 Server Application
 
     Microsoft Azure
-    Visual Studio
 
 BUILD:
 
@@ -55,6 +54,7 @@ Phone Application
 Server Application
 
     Microsoft Azure
+    SQL Server Management Studio 17
 
 Source Code
 
@@ -64,7 +64,7 @@ INSTALLATION
 ------------
 
 Phone Application
-    
+
 http://fbla-yardsaledownload.azurewebsites.net
 
     1. Run Android Studio
@@ -87,7 +87,7 @@ TESTING
 How to Register New User:
 
     1. Press "Create account"
-    2. Follow instructions for creating a Google account
+    2. Follow instructions for creating a Microsoft account
 
 How to Log In:
 
@@ -104,20 +104,25 @@ How to Swith Between Pages:
 How to Edit Account Info:
 
     1. Go to Home page
-    2. Press "Account" 
-    3. Edit desired information
-    4. Click "Save" to save data and close activity
-    5. OR click "Cancel" to not save data and close activity
-*IMPORTANT* ENTER YOUR ZIPCODE TO SEE ITEMS IN THE SAME ZIPCODE ON THE LOCAL FRAGMENT
+    2. Press "Account"
+    3. Type in Name
+    4. Type in zipcode
+    5. OR Select state and type in city name
+    6. Select school if available
+    7. Choose either a 5 mile or 10 mile radius from school selected
+    8. Click "Save" to save data and close activity
+    9. OR click "Cancel" to not save data and close activity
+*IMPORTANT* SCHOOLS SHOWN IN LOCAL SALES AND ON THE MAP ARE WITHIN THE RADIUS FROM SELECTED SCHOOL
 
 How to Add Sales:
 
     1. Go to Home page
     2. Press "Add Sales"
-    3. Enter desired information about item
-    4. Press "Finish" to upload item and close activity
-    5. OR press "Add Another" to upload item and restart activity
-    6. OR press "Cancel" to not upload item and close activity
+    3. Enter required information (Item Name and Item Price)
+    4. Enter optional information (Item Description and Picture from Camera or Gallery)
+    5. Press "Finish" to upload item and close activity
+    6. OR press "Add Another" to upload item and restart activity
+    7. OR press "Cancel" to not upload item and close activity
 
 How to View Your Sales:
 
@@ -144,6 +149,11 @@ How to Delete Comment:
     3. Press "Confirm" to delete comment
     4. OR press "Cancel" to not delete comment
 
+How to View Number of Sales for a School: *********************************
+
+    1. Go to Map page
+    2. Press desired school's icon
+
 How to Logout:
 
     1. Go to Home page
@@ -161,6 +171,22 @@ https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-and
 https://portal.azure.com/
 
 https://console.developers.google.com/apis/credentials?project=fbla-yardsale
+
+https://apps.dev.microsoft.com/
+
+http://federalgovernmentzipcodes.us
+
+https://nces.ed.gov/ccd/pubschuniv.asp
+
+https://nces.ed.gov/surveys/pss/pssdata.asp
+
+http://daynebatten.com/2015/09/latitude-longitude-distance-sql/
+
+https://developers.google.com/maps/documentation/android-api/start
+
+https://github.com/Azure/azure-content-nlnl/blob/master/articles/mobile-services/mobile-services-android-how-to-use-client-library.md
+
+https://github.com/azure/azure-storage-android
 
 COPYRIGHT NOTATIONS
 -------------------

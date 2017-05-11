@@ -40,7 +40,7 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ListItemsBinding mBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()), R.layout.list_items, parent, false);
-        mBinding.sold.setOnClickListener(this);
+        mBinding.sold.setOnClickListener(this); // This really just deletes the item.
         mBinding.comments.setOnClickListener(this);
         mBinding.layoutAddress.setVisibility(View.GONE);
         mBinding.layoutChapter.setVisibility(View.GONE);
@@ -56,15 +56,14 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
         SaleItem item = MySalesController.getItem(position);
         if (item != null) {
             mBinding = holder.getBinding();
-            Log.d("MySalesAdapter", "onBindViewHolder");
             mBinding.comments.setTag(position);
             mBinding.name.setText(item.getName());
             mBinding.price.setText(String.format("$%.2f", item.getPrice()));
             mBinding.description.setText(item.getDescription());
             mBinding.comments.setText("COMMENTS (" + item.getNumComments() + ")");
-            mBinding.sold.setTag(position);
-            Bitmap image = item.getPicture();
-            if (image != null) {
+            mBinding.sold.setTag(position); // Being sold means to delete it.
+            if (item.getHasPicture()) {
+                Bitmap image = item.getPicture();
                 FblaPicture.setLayoutImage(mBinding.layoutPicture);
                 FblaPicture.LoadPictureOnView(mBinding.picture, image);
             }
@@ -90,6 +89,7 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
                 }
                 break;
             case R.id.sold:
+                // When it's sold, we just delete it.
                 final int position = (int)v.getTag();
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Are You Sure?");
@@ -145,6 +145,7 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
             @Override
             protected Void doInBackground(Void... params) {
                 try {
+                    FblaPicture.DeleteImage(item.getId());
                     mSaleItemTable.delete(item);
                     Log.d("MySales:delete", "Deleted item " + item.getName());
                     mContext.runOnUiThread(new Runnable() {

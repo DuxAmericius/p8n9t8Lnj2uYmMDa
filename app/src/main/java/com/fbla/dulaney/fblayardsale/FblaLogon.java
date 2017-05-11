@@ -10,11 +10,10 @@
    with the Azure server is working. This class extends AsyncTask because almost all
    of the login processes must be done in the background.
 
-   Users must create or use a Google+ account. Even though users must agree to
-   grant access to their email, the only piece of information about the Google+
-   account that is stored in the database is Google's unique ID string, which
+   Users must create or use a Microsoft account. The only piece of information about the
+   account that is stored in the database is Azure's user token string, which
    looks like this: sid:fb96bd335c1fba115e191a4526df5353
-   Also, when using the Google+ provider, we have to continually clear cookies
+   Also, when using the Microsoft provider, we have to continually clear cookies
    because the token caching interferes with our ability to logoff.
 
    The first time a user logs in, a new row is inserted into the Account table.
@@ -53,6 +52,10 @@ import java.util.concurrent.ExecutionException;
 
 public class FblaLogon extends AsyncTask {
     final public static String AZUREURL = "https://fbla-yardsale.azurewebsites.net";
+    // Setup to use either Google+ or Microsoft.
+    // However, Google changed their policy, so it doesn't work anymore.
+    // Therefore, we will use Microsoft Accounts to authenticate.
+    final private static MobileServiceAuthenticationProvider PROVIDER = MobileServiceAuthenticationProvider.MicrosoftAccount;
 
     private static boolean mLoggedOn = false;
     private static String mUserId = null;
@@ -70,7 +73,7 @@ public class FblaLogon extends AsyncTask {
         mContext = context;
         if (getLoggedOn()) return;
         // Clear cookies now to support being able to logout easily later.
-        clearCookies();
+        //clearCookies();
         try {
             mClient = new MobileServiceClient(AZUREURL, mContext);
         } catch (Exception e) {
@@ -97,7 +100,7 @@ public class FblaLogon extends AsyncTask {
     }
     public void Logoff() {
         mLoggedOn = false;
-        clearCookies();
+        //clearCookies();
         setCache(mContext, null, null);
         mAccountTable = null;
         mAccount = null;
@@ -146,7 +149,7 @@ public class FblaLogon extends AsyncTask {
         for (LogonResultListener listener : mListeners) {
             listener.onLogonComplete(e);
         }
-        Log.d("FblaLogon", "onLogonFailure");
+        Log.d("FblaLogon:Failure", e.toString());
     }
 
     // This starts the whole logon process.
@@ -154,8 +157,8 @@ public class FblaLogon extends AsyncTask {
         if (mClient == null) return new Exception("Client Not Initialized");
         getCache(mContext);
         if (mUserId == null || mToken == null || isTokenExpired(mToken)) {
-            // Missing or expired token, so need to kick off the Google+ logon process.
-            return googleLogon();
+            // Missing or expired token, so need to kick off the Oauth logon process.
+            return providerLogon();
         } else {
             // The cached token seems to be good, so load the account with it.
             MobileServiceUser user = new MobileServiceUser(mUserId);
@@ -165,12 +168,12 @@ public class FblaLogon extends AsyncTask {
         }
     }
 
-    // It seems to use WebKit to perform the Google+ OAuth authentication via Azure.
+    // It seems to use WebKit to perform the OAuth authentication via Azure.
     // If successful, load the Account.  Otherwise return an exception to notify
     // the listeners that it didn't work.
-    private Object googleLogon() {
+    private Object providerLogon() {
         try {
-            MobileServiceUser mobileServiceUser = mClient.login(MobileServiceAuthenticationProvider.Google).get();
+            MobileServiceUser mobileServiceUser = mClient.login(PROVIDER).get();
             Log.d("FblaLogon:login", "Logged On");
             setCache(mContext, mobileServiceUser.getUserId(), mobileServiceUser.getAuthenticationToken());
             return loadAccount();
@@ -201,7 +204,7 @@ public class FblaLogon extends AsyncTask {
                     mAccountTable.insert(act);
                     setAccount(act);
                     Log.d("FblaLogon:account", "AccountEdit Created");
-                    return loadSchool();
+                    return null;
                 } else {
                     Log.d("FblaLogon:account", mEx.toString());
                     return mEx;

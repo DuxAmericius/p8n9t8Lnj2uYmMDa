@@ -11,6 +11,8 @@
 
    This activity also interacts with the phone's photo gallery and camera in order
    to include a picture of the item.
+
+   Pictures are saved to Azure storage using FblaPicture.
 */
 package com.fbla.dulaney.fblayardsale;
 
@@ -200,6 +202,7 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
         if (b != null) {
             item.setPicture(b);
         }
+        MySalesController.addItem(item);
 
         // Save the item to the database over the internet.
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -208,11 +211,15 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
                 try {
                     mSaleItemTable.insert(item);
                     Log.d("AddSales:insert", "Created item " + item.getName());
+                    if (item.getHasPicture()) {
+                        Bitmap picture = item.getPicture();
+                        FblaPicture.UploadImage(item.getId(), picture);
+                        // For some strange reason, uploading the picture destroys it on the item. So put it back.
+                        item.setPicture(picture);
+                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            item.setAccount(FblaLogon.getAccount());
-                            MySalesController.addItem(item);
                         }
                     });
                 } catch (Exception e) {

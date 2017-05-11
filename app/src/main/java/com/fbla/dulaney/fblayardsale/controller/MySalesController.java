@@ -12,14 +12,18 @@
    comments are counted from the ItemComment table in order to display it on
    the comments button.
 
+   Pictures for each item are fetched from Azure storage using FblaPicture.
+
 */
 package com.fbla.dulaney.fblayardsale.controller;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.fbla.dulaney.fblayardsale.FblaLogon;
+import com.fbla.dulaney.fblayardsale.FblaPicture;
 import com.fbla.dulaney.fblayardsale.model.ItemComment;
 import com.fbla.dulaney.fblayardsale.model.SaleItem;
 import com.microsoft.windowsazure.mobileservices.MobileServiceList;
@@ -78,6 +82,9 @@ public class MySalesController {
                         final MobileServiceList<ItemComment> cnt =
                                 mItemCommentTable.where().field("itemid").eq(s.getId()).includeInlineCount().execute().get();
                         s.setNumComments(cnt.getTotalCount());
+                        // Now get the picture, if it exists.
+                        if (s.getHasPicture())
+                            s.setPicture(FblaPicture.DownloadImage(s.getId()));
                         saleItems.add(s);
                     }
                     return saleItems;

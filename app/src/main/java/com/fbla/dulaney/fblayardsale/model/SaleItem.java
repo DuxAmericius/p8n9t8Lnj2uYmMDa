@@ -8,11 +8,7 @@
    This class is used by the Azure library to query and create data in the
    SaleItem database table.
 
-   This class also makes use of the FblaPicture library in order to convert
-   pictures into a string and back again so that we can store them directly in
-   the database table.
-
-   In addition, we store the number of comments and a link to the Account object
+   We store the number of comments and a link to the Account object
    so that additional details can be displayed.
 */
 package com.fbla.dulaney.fblayardsale.model;
@@ -32,10 +28,12 @@ public class SaleItem {
     private String mDescription; // Description of the item.
     @com.google.gson.annotations.SerializedName("price")
     private float mPrice; // Price of the item.
-    @com.google.gson.annotations.SerializedName("picture")
-    private String mPictureBase64; // Base64 Encoded string of a picture of the item.
+    @com.google.gson.annotations.SerializedName("hasPicture")
+    private boolean mHasPicture; // If a picture has been added or not.
 
     // Transient fields will not get queried or saved to the database
+    @com.google.gson.annotations.Expose(serialize = false)
+    private transient Bitmap mPicture;
     @com.google.gson.annotations.Expose(serialize = false)
     private transient int mNumComments; // Number of comments
     @com.google.gson.annotations.Expose(serialize = false)
@@ -47,9 +45,10 @@ public class SaleItem {
         mId = "";
         mUserId = null;
         mDescription = "";
-        mPictureBase64 = null;
+        mPicture = null;
         mPrice = 0;
         mNumComments = 0;
+        mHasPicture = false;
     }
 
     @Override
@@ -66,15 +65,12 @@ public class SaleItem {
     public final void setDescription(String description) { mDescription = description; }
     public float getPrice() { return mPrice; }
     public final void setPrice(float price) { mPrice = price; }
-    // This getter automatically converts the string to a Bitmap using a separate library.
-    public Bitmap getPicture() {
-        if (mPictureBase64 == null) return null;
-        else return FblaPicture.DecodeFromBase64(mPictureBase64);
-    }
-    // This setter automatically converts the Bitmap into an encoded string using a separate library.
+    public boolean getHasPicture() { return mHasPicture; }
+    public final void setHasPicture(boolean hasPicture) { mHasPicture = hasPicture; }
+    public Bitmap getPicture() { return mPicture; }
     public final void setPicture(Bitmap image) {
-        if (image == null) mPictureBase64 = null;
-        else mPictureBase64 = FblaPicture.EncodeToBase64(image);
+        mPicture = image;
+        mHasPicture = (image != null);
     }
     public Account getAccount() { return mAccount; }
     // Setting the Account will automatically set the database foreign key, too.

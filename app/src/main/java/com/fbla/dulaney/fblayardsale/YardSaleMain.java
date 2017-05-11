@@ -45,10 +45,7 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
     public void Logoff() {
         mLogon.Logoff();
         mLogon = null;
-        // Have to recreate the logon object in order to execute the task again.
-        mLogon = new FblaLogon(this);
-        mLogon.setLogonListener(this);
-        mLogon.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        this.finish();
     }
 
     @Override
