@@ -48,6 +48,15 @@ public class MySalesController {
         else return null;
     }
 
+    public static void notifyItem(SaleItem item) {
+        if (mSaleItems.contains(item)) {
+            int position = mSaleItems.indexOf(item);
+            for (RecyclerView.Adapter adapter : mAdapters) {
+                adapter.notifyItemChanged(position);
+            }
+        }
+    }
+
     public static void addItem(SaleItem item) {
         mSaleItems.add(item);
         for (RecyclerView.Adapter adapter : mAdapters) {

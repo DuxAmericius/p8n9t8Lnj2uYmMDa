@@ -73,7 +73,7 @@ public class FblaLogon extends AsyncTask {
         mContext = context;
         if (getLoggedOn()) return;
         // Clear cookies now to support being able to logout easily later.
-        //clearCookies();
+        clearCookies();
         try {
             mClient = new MobileServiceClient(AZUREURL, mContext);
         } catch (Exception e) {
@@ -154,6 +154,7 @@ public class FblaLogon extends AsyncTask {
 
     // This starts the whole logon process.
     private Object doLogon() {
+        Log.d("FblaLogon", "Logging on...");
         if (mClient == null) return new Exception("Client Not Initialized");
         getCache(mContext);
         if (mUserId == null || mToken == null || isTokenExpired(mToken)) {

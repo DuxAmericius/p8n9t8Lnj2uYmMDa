@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.fbla.dulaney.fblayardsale.controller.CommentListController;
 import com.fbla.dulaney.fblayardsale.databinding.ActivityCommentsBinding;
+import com.fbla.dulaney.fblayardsale.model.Account;
 import com.fbla.dulaney.fblayardsale.model.ItemComment;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
@@ -77,6 +78,8 @@ public class Comments extends AppCompatActivity implements View.OnClickListener 
         comment.setComment(mBinding.newcomment.getText().toString());
         comment.setUserId(FblaLogon.getUserId());
         comment.setItemId(CommentListController.getItem().getId());
+        comment.setAccount(FblaLogon.getAccount());
+        CommentListController.addComment(comment);
 
         // Save the item to the database over the internet.
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -88,8 +91,6 @@ public class Comments extends AppCompatActivity implements View.OnClickListener 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            comment.setAccount(FblaLogon.getAccount());
-                            CommentListController.addComment(comment);
                         }
                     });
                 } catch (Exception e) {

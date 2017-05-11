@@ -22,7 +22,9 @@
 */
 package com.fbla.dulaney.fblayardsale;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -64,6 +66,7 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
 
         if (!FblaLogon.getLoggedOn()) {
             Toast.makeText(this, "Unable to connect to Azure. Please try again.", Toast.LENGTH_LONG).show();
+            setResult(Activity.RESULT_CANCELED, new Intent());
             finish();
             return;
         }
@@ -71,7 +74,6 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_account);
         mBinding.zip.setOnKeyListener(this);
         mBinding.city.setOnKeyListener(this);
-        mBinding.save.setEnabled(false);
         mBinding.save.setOnClickListener(this);
         mBinding.cancel.setOnClickListener(this);
         mBinding.searchZip.setOnClickListener(this);
@@ -105,6 +107,7 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
         // Display your current school.
         Account account = FblaLogon.getAccount();
         mBinding.name.setText(account.getName());
+        mBinding.save.setEnabled(account.getName().length() > 0);
         if (account.getSchool() != null) {
             Schools school = account.getSchool();
             mSchools.add(school);
@@ -203,6 +206,7 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        setResult(Activity.RESULT_OK, new Intent());
                                         finish();
                                     }
                                 });
@@ -220,6 +224,7 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.cancel:
                 // This just closes the activity, returning you to YardSaleMain.
+                setResult(Activity.RESULT_CANCELED, new Intent());
                 this.finish();
                 break;
             case R.id.search_zip:
@@ -343,8 +348,8 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
+        setResult(Activity.RESULT_CANCELED, new Intent());
         this.finish();
     }
 

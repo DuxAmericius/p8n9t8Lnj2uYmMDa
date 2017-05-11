@@ -49,6 +49,9 @@ public class CommentListController {
         for (RecyclerView.Adapter adapter : mAdapters) {
             adapter.notifyDataSetChanged();
         }
+        // Update the count on the display, if shown
+        MySalesController.notifyItem(mItem);
+        LocalController.notifyItem(mItem);
     }
 
     // Remove a comment and notify the adapter of the change
@@ -58,6 +61,9 @@ public class CommentListController {
         for (RecyclerView.Adapter adapter : mAdapters) {
             adapter.notifyDataSetChanged();
         }
+        // Update the count on the display, if shown
+        MySalesController.notifyItem(mItem);
+        LocalController.notifyItem(mItem);
     }
 
     public static SaleItem getItem() { return mItem; }

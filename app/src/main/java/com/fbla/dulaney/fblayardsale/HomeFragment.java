@@ -10,6 +10,7 @@
 */
 package com.fbla.dulaney.fblayardsale;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -33,7 +34,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             case R.id.account:
                 if (FblaLogon.getLoggedOn()) {
-                    getActivity().startActivity(new Intent(getActivity(), AccountEdit.class));
+                    getActivity().startActivityForResult(new Intent(getActivity(), AccountEdit.class), 0);
                 }
                 break;
             case R.id.add:

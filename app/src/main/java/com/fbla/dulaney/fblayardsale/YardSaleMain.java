@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
     ActivityYardsaleBinding mBinding;
     FblaLogon mLogon;
     private boolean mLogonComplete = false;
+    private String mTitle;
 
     public void Logoff() {
         mLogon.Logoff();
@@ -64,13 +66,17 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
         mBinding.local.setOnClickListener(this);
         mBinding.map.setOnClickListener(this);
         setSupportActionBar(mBinding.myToolbar);
+        mTitle = mBinding.myToolbar.getTitle().toString();
 
         // Make sure everything is disabled until the logon completes
         mBinding.local.setEnabled(false);
+        mBinding.map.setEnabled(false);
+        mBinding.pager.setEnabled(false);
 
         mLogon.setLogonListener(this);
-        if (!FblaLogon.getLoggedOn())
+        if (!FblaLogon.getLoggedOn()) {
             mLogon.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        }
 
     }
 
@@ -127,7 +133,10 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
         } else {
             Account account = FblaLogon.getAccount();
             mLogonComplete = true;
+            mBinding.myToolbar.setTitle(mTitle + " - " + account.getName());
             mBinding.local.setEnabled(true);
+            mBinding.map.setEnabled(true);
+            mBinding.pager.setEnabled(true);
             if (mHomeFragment != null) {
                 mHomeFragment.setEnabled(true);
             }
@@ -139,7 +148,7 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
             }
 
             if (account.getName() == null || account.getName().equals("")) {
-                startActivity(new Intent(this, AccountEdit.class));
+                startActivityForResult(new Intent(this, AccountEdit.class), 0);
             } else {
                 MySalesController.Refresh();
                 LocalController.Refresh(this);
@@ -166,4 +175,14 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
 
         }
 
-    }}
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("YardSaleMain", "Result of AccountEdit");
+        if (resultCode == RESULT_OK) {
+            mBinding.myToolbar.setTitle(mTitle + " - " + FblaLogon.getAccount().getName());
+        }
+    }
+}
