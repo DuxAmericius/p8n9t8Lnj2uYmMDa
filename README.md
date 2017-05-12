@@ -162,57 +162,44 @@ How to Exit:
 REFERENCES
 ----------
 
-Source Code
+Source Code:
+https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa
 
-    https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa
+Microsoft Azure Portal:
+https://portal.azure.com/
 
-Microsoft Azure Portal
+Android Developers Documentation:
+https://developer.android.com/index.html
 
-    https://portal.azure.com/
+Microsoft Azure - Create an Android app:
+https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-android-get-started
 
-Android Developers Documentation
+Google API Key for using Maps:
+https://console.developers.google.com/apis/credentials?project=fbla-yardsale
 
-    https://developer.android.com/index.html
+Microsoft Application for Microsoft Login access:
+https://apps.dev.microsoft.com/#/application/6e9f8417-81b1-4052-87fe-3e2d857f3a68
 
-Microsoft Azure - Create an Android app
+Database of USA Zip Codes:
+http://federalgovernmentzipcodes.us
 
-    https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-android-get-started
+Database of all USA Public Schools:
+https://nces.ed.gov/ccd/pubschuniv.asp
 
-Google API Key for using Maps
+Database of all USA Private Schools:
+https://nces.ed.gov/surveys/pss/pssdata.asp
 
-    https://console.developers.google.com/apis/credentials?project=fbla-yardsale
+Algorithm for calculating distance between schools:
+http://daynebatten.com/2015/09/latitude-longitude-distance-sql/
 
-Microsoft Application for Microsoft Login access
+Documentation for using Google Maps:
+https://developers.google.com/maps/documentation/android-api/start
 
-    https://apps.dev.microsoft.com/#/application/6e9f8417-81b1-4052-87fe-3e2d857f3a68
+Documentation for using Microsoft Azure for querying the database:
+https://github.com/Azure/azure-content-nlnl/blob/master/articles/mobile-services/mobile-services-android-how-to-use-client-library.md
 
-Database of USA Zip Codes
-
-    http://federalgovernmentzipcodes.us
-
-Database of all USA Public Schools
-
-    https://nces.ed.gov/ccd/pubschuniv.asp
-
-Database of all USA Private Schools
-
-    https://nces.ed.gov/surveys/pss/pssdata.asp
-
-Algorithm for calculating distance between schools
-
-    http://daynebatten.com/2015/09/latitude-longitude-distance-sql/
-
-Documentation for using Google Maps
-
-    https://developers.google.com/maps/documentation/android-api/start
-
-Documentation for using Microsoft Azure for querying the database
-
-    https://github.com/Azure/azure-content-nlnl/blob/master/articles/mobile-services/mobile-services-android-how-to-use-client-library.md
-
-Documentation for using Microsoft Azure Storage on Android
-
-    https://github.com/azure/azure-storage-android
+Documentation for using Microsoft Azure Storage on Android:
+https://github.com/azure/azure-storage-android
 
 COPYRIGHT NOTATIONS
 -------------------

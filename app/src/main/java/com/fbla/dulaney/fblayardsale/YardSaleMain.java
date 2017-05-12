@@ -8,9 +8,7 @@
    activity fragments. This activity has the title bar and navigation buttons.
    The ViewPager fills the center, which holds each page fragment. It automatically handles
    swipes and smooth transitions between each page. Most navigation is handled by this activity.
-   This activity will also execute the initial login using a Google+ account.  The login
-   uses Azure Mobile Apps to get the user's Google ID and Token, which is cached and used
-   by all other database calls to Azure Mobile Apps.
+   This activity will also execute the initial login using a Microsoft account.
 */
 
 package com.fbla.dulaney.fblayardsale;

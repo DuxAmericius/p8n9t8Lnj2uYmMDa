@@ -16,7 +16,7 @@ package com.fbla.dulaney.fblayardsale.model;
 public class Account {
     // Database Columns
     @com.google.gson.annotations.SerializedName("id")
-    private String mId; // Unique id for the user, as provided by the Google+ logon
+    private String mId; // Unique id for the user, as provided by the Microsoft logon
     @com.google.gson.annotations.SerializedName("name")
     private String mName; // Your username
     @com.google.gson.annotations.SerializedName("schoolid")
