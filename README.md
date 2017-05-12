@@ -63,6 +63,8 @@ https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa
 INSTALLATION
 ------------
 
+http://fbla-yardsaledownload.azurewebsites.net
+
 Precompiled Installation
 
     1. Go to http://fbla-yardsaledownload.azurewebsites.net on phone
