@@ -45,22 +45,28 @@ import java.util.UUID;
 import com.fbla.dulaney.fblayardsale.model.*;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
-public class AddSales extends AppCompatActivity implements View.OnClickListener {
-    ActivityAddsalesBinding mBinding;
-
+public class AddSales extends AppCompatActivity implements View.OnClickListener, FblaAzure.LogonResultListener {
+    private ActivityAddsalesBinding mBinding;
     private MobileServiceTable<SaleItem> mSaleItemTable;
+    private FblaAzure mAzure;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addsales);
-
-        if (!FblaLogon.getLoggedOn()) {
+        Bundle b = getIntent().getExtras();
+        String userId = b.getString("userId");
+        String token = b.getString("token");
+        if (userId == null || token == null) {
             Toast.makeText(this, "Unable to connect to Azure. Please try again.", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
-        mSaleItemTable = FblaLogon.getClient().getTable(SaleItem.class);
+        mAzure = new FblaAzure(this);
+        mAzure.setLogonListener(this);
+        mAzure.doLogon(userId, token);
+
+        mSaleItemTable = mAzure.getClient().getTable(SaleItem.class);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_addsales);
         FblaPicture.setLayoutImage(mBinding.activityAddsales);
@@ -165,7 +171,12 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
                 // Save the current item, and reload the activity to be ready for another one.
                 addItem(v);
                 this.finish();
-                this.startActivity(new Intent(this, AddSales.class));
+                Intent it = new Intent(this, AddSales.class);
+                Bundle b = new Bundle();
+                b.putString("userId", mAzure.getUserId());
+                b.putString("token", mAzure.getToken());
+                it.putExtras(b);
+                this.startActivity(it);
                 break;
             case R.id.finish:
                 // Save the current item and return to YardSaleMain.
@@ -187,13 +198,13 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
 
     // Add a new item to the database.
     private void addItem(View view) {
-        if (!FblaLogon.getLoggedOn()) return;
+        if (!mAzure.getLoggedOn()) return;
 
         // Create a new item from the SaleItem model.
         final SaleItem item = new SaleItem();
         item.setId(UUID.randomUUID().toString());
         item.setName(mBinding.editname.getText().toString());
-        item.setAccount(FblaLogon.getAccount());
+        item.setAccount(mAzure.getAccount());
         item.setDescription(mBinding.editdesc.getText().toString());
         String sPrice = mBinding.editprice.getText().toString();
         if (sPrice == null || sPrice.equals("")) item.setPrice(0);
@@ -263,4 +274,9 @@ public class AddSales extends AppCompatActivity implements View.OnClickListener 
             }
         }
     } // onActivityResult
+
+    @Override
+    public void onLogonComplete(Exception e) {
+
+    }
 }

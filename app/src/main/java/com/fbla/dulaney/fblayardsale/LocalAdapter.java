@@ -27,9 +27,11 @@ import com.fbla.dulaney.fblayardsale.model.Schools;
 public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> implements View.OnClickListener {
     private View.OnClickListener mParentListener;
     private ListItemsBinding mBinding;
+    private FblaAzure mAzure;
 
-    public LocalAdapter (View.OnClickListener onClickListener) {
+    public LocalAdapter (View.OnClickListener onClickListener, FblaAzure azure) {
         mParentListener = onClickListener;
+        mAzure = azure;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (!FblaLogon.getLoggedOn()) return;
+        if (!mAzure.getLoggedOn()) return;
         SaleItem item = LocalController.getItem(position);
         if (item != null) {
             mBinding = holder.getBinding();
@@ -81,10 +83,10 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.comments:
-                if (FblaLogon.getLoggedOn()) {
+                if (mAzure.getLoggedOn()) {
                     int position = (int)v.getTag();
                     CommentListController.setItem(LocalController.getItem(position));
-                    CommentListController.Refresh();
+                    CommentListController.Refresh(mAzure);
                     mParentListener.onClick(v);
                 }
                 break;

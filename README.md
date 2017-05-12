@@ -63,23 +63,21 @@ https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa
 INSTALLATION
 ------------
 
-Phone Application
+Precompiled Installation
+    1. Go to http://fbla-yardsaledownload.azurewebsites.net on phone
+    2. Follow instructions
 
-http://fbla-yardsaledownload.azurewebsites.net
-
+Compile Installation
     1. Run Android Studio
     2. Open FBLA YardSale Project
     3. Change Android phone settings
-        a. Veify Internet connection
+        a. Verify Internet connection
         b. Allow installation of non-Market applications
         c. Enable debug mode when USB is connected
     4. Connect Android phone to computer through USB cable
     5. Press SHIFT + F10 in Android Studio
     6. Press ENTER when the pop-up windo for running on phone is displayed
     7. Application will automatically start on phone
-    OR
-    1. Go to http://fbla-yardsaledownload.azurewebsites.net on phone
-    2. Follow instructions
 
 TESTING
 -------
@@ -96,7 +94,7 @@ How to Log In:
     3. Type in password
     4. Press "Sign In"
 
-How to Swith Between Pages:
+How to Switch Between Pages:
 
     1. Click on desired page's icon on the top row
     2. OR swipe left or right to desired page
@@ -106,8 +104,8 @@ How to Edit Account Info:
     1. Go to Home page
     2. Press "Account"
     3. Type in Name
-    4. Type in zipcode
-    5. OR Select state and type in city name
+    4. Type in zipcode, then press Search
+    5. OR Select state and type in city name, then press Search
     6. Select school if available
     7. Choose either a 5 mile or 10 mile radius from school selected
     8. Click "Save" to save data and close activity
@@ -149,43 +147,56 @@ How to Delete Comment:
     3. Press "Confirm" to delete comment
     4. OR press "Cancel" to not delete comment
 
-How to View Number of Sales for a School: *********************************
+How to View Number of Sales for a School:
 
     1. Go to Map page
     2. Press desired school's icon
 
-How to Logout:
+How to Exit:
 
     1. Go to Home page
-    2. Press "Logout"
+    2. Press "Close App"
 
 REFERENCES
 ----------
 
+Source Code
 https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa
 
-https://developer.android.com/index.html
-
-https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-android-get-started
-
+Microsoft Azure Portal
 https://portal.azure.com/
 
+Android Developers Documentation
+https://developer.android.com/index.html
+
+Microsoft Azure - Create an Android app
+https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-android-get-started
+
+Google API Key for using Maps
 https://console.developers.google.com/apis/credentials?project=fbla-yardsale
 
-https://apps.dev.microsoft.com/
+Microsoft Application for Microsoft Login access
+https://apps.dev.microsoft.com/#/application/6e9f8417-81b1-4052-87fe-3e2d857f3a68
 
+Database of USA Zip Codes
 http://federalgovernmentzipcodes.us
 
+Database of all USA Public Schools
 https://nces.ed.gov/ccd/pubschuniv.asp
 
+Database of all USA Private Schools
 https://nces.ed.gov/surveys/pss/pssdata.asp
 
+Algorithm for calculating distance between schools
 http://daynebatten.com/2015/09/latitude-longitude-distance-sql/
 
+Documentation for using Google Maps
 https://developers.google.com/maps/documentation/android-api/start
 
+Documentation for using Microsoft Azure for querying the database
 https://github.com/Azure/azure-content-nlnl/blob/master/articles/mobile-services/mobile-services-android-how-to-use-client-library.md
 
+Documentation for using Microsoft Azure Storage on Android
 https://github.com/azure/azure-storage-android
 
 COPYRIGHT NOTATIONS

@@ -22,7 +22,7 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.fbla.dulaney.fblayardsale.FblaLogon;
+import com.fbla.dulaney.fblayardsale.FblaAzure;
 import com.fbla.dulaney.fblayardsale.FblaPicture;
 import com.fbla.dulaney.fblayardsale.model.ItemComment;
 import com.fbla.dulaney.fblayardsale.model.SaleItem;
@@ -73,20 +73,31 @@ public class MySalesController {
 
     private static MobileServiceTable<SaleItem> mSaleItemTable;
     private static MobileServiceTable<ItemComment> mItemCommentTable;
-    public static void Refresh() {
+    public static void Refresh(FblaAzure azure) {
         Log.d("MySalesController", "Refresh");
-        if (!FblaLogon.getLoggedOn()) return;
+        if (!azure.getLoggedOn()) return;
         mSaleItems.clear();
 
-        mSaleItemTable = FblaLogon.getClient().getTable(SaleItem.class);
-        mItemCommentTable = FblaLogon.getClient().getTable(ItemComment.class);
+        mSaleItemTable = azure.getClient().getTable(SaleItem.class);
+        mItemCommentTable = azure.getClient().getTable(ItemComment.class);
         new AsyncTask<Object, Object, Object>() {
+            class TaskResult {
+                public FblaAzure azure;
+                public ArrayList<SaleItem> saleItems;
+
+                public TaskResult (FblaAzure a) {
+                    azure = a;
+                    saleItems = new ArrayList<>();
+                }
+            }
+
             @Override
             protected Object doInBackground(Object... params) {
                 try {
-                    ArrayList<SaleItem> saleItems = new ArrayList<>();
+                    FblaAzure azure = (FblaAzure)params[0];
+                    TaskResult taskResult = new TaskResult(azure);
                     final MobileServiceList<SaleItem> result =
-                            mSaleItemTable.where().field("userid").eq(FblaLogon.getUserId()).execute().get();
+                            mSaleItemTable.where().field("userid").eq(azure.getUserId()).execute().get();
                     for (SaleItem s : result) {
                         final MobileServiceList<ItemComment> cnt =
                                 mItemCommentTable.where().field("itemid").eq(s.getId()).includeInlineCount().execute().get();
@@ -94,9 +105,9 @@ public class MySalesController {
                         // Now get the picture, if it exists.
                         if (s.getHasPicture())
                             s.setPicture(FblaPicture.DownloadImage(s.getId()));
-                        saleItems.add(s);
+                        taskResult.saleItems.add(s);
                     }
-                    return saleItems;
+                    return taskResult;
                 } catch (Exception exception) {
                     Log.e("MySalesController", exception.toString());
                     return null;
@@ -105,8 +116,9 @@ public class MySalesController {
             @Override
             protected void onPostExecute(Object result) {
                 if (result != null) {
-                    for (SaleItem item : (ArrayList<SaleItem>)result) {
-                        item.setAccount(FblaLogon.getAccount());
+                    TaskResult taskResult = (TaskResult)result;
+                    for (SaleItem item : taskResult.saleItems) {
+                        item.setAccount(taskResult.azure.getAccount());
                         mSaleItems.add(item);
                     }
                     Log.d("MySalesController", "Set Notify");
@@ -115,6 +127,6 @@ public class MySalesController {
                     }
                 }
             }
-        }.execute();
+        }.execute(azure);
     }
 }

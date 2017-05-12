@@ -25,34 +25,57 @@ import com.fbla.dulaney.fblayardsale.databinding.FragmentHomeBinding;
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
-    //private YardSaleMain mParent;
-    FragmentHomeBinding mBinding;
+    private FragmentHomeBinding mBinding;
 
     @Override
     public void onClick(View v) {
+        YardSaleMain main = (YardSaleMain)getActivity();
+        FblaAzure azure = main.getAzure();
+        boolean loggedOn = (azure != null && azure.getLoggedOn());
         switch (v.getId()) {
 
             case R.id.account:
-                if (FblaLogon.getLoggedOn()) {
-                    getActivity().startActivityForResult(new Intent(getActivity(), AccountEdit.class), 0);
+                if (loggedOn) {
+                    Intent i = new Intent(main, AccountEdit.class);
+                    Bundle b = new Bundle();
+                    b.putString("userId", azure.getUserId());
+                    b.putString("token", azure.getToken());
+                    i.putExtras(b);
+                    getActivity().startActivityForResult(i, 0);
                 }
                 break;
             case R.id.add:
-                if (FblaLogon.getLoggedOn()) {
-                    getActivity().startActivity(new Intent(getActivity(), AddSales.class));
+                if (loggedOn) {
+                    Intent i = new Intent(main, AddSales.class);
+                    Bundle b = new Bundle();
+                    b.putString("userId", azure.getUserId());
+                    b.putString("token", azure.getToken());
+                    i.putExtras(b);
+                    getActivity().startActivity(i);
                 }
                 break;
             case R.id.my:
-                if (FblaLogon.getLoggedOn()) {
-                    getActivity().startActivity(new Intent(getActivity(), MySales.class));
+                if (loggedOn) {
+                    Intent i = new Intent(main, MySales.class);
+                    Bundle b = new Bundle();
+                    b.putString("userId", azure.getUserId());
+                    b.putString("token", azure.getToken());
+                    i.putExtras(b);
+                    getActivity().startActivity(i);
                 }
                 break;
             case R.id.help:
                 getActivity().startActivity(new Intent(getActivity(), Help.class));
                 break;
             case R.id.logout:
-                YardSaleMain parent = (YardSaleMain)getActivity();
-                parent.Logoff();
+                // Logout is a problem. Azure doesn't seem to be able to handle it
+                // when I clear the cookies in order to force a new logon prompt.
+                // If you try running the app too soon after logging off,
+                // you get this strange net::ERR_EMPTY_RESPONSE error, which is coming
+                // from the Azure library itself. Because of that problem, we are removing
+                // the logoff feature and relabeling this button "Close App"
+                //main.Logoff();
+                getActivity().finish();
                 break;
             default:
                 break;
@@ -125,7 +148,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        //mParent = (YardSaleMain)getActivity();
     }
 
 }

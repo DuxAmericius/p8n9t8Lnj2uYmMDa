@@ -51,27 +51,42 @@ import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class AccountEdit extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
+public class AccountEdit extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener, FblaAzure.LogonResultListener {
 
-    ActivityAccountBinding mBinding;
-    ArrayAdapter<CharSequence> mStateAdapter;
-    ArrayAdapter<Schools> mSchoolAdapter;
-    private static MobileServiceTable<Schools> mSchoolsTable;
+    private ActivityAccountBinding mBinding;
+    private ArrayAdapter<CharSequence> mStateAdapter;
+    private ArrayAdapter<Schools> mSchoolAdapter;
     private ArrayList<Schools> mSchools;
+    private FblaAzure mAzure;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         mSchools = new ArrayList<Schools>(0);
-
-        if (!FblaLogon.getLoggedOn()) {
+        Bundle b = getIntent().getExtras();
+        String userId = b.getString("userId");
+        String token = b.getString("token");
+        if (userId == null || token == null) {
             Toast.makeText(this, "Unable to connect to Azure. Please try again.", Toast.LENGTH_LONG).show();
             setResult(Activity.RESULT_CANCELED, new Intent());
             finish();
             return;
         }
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_account);
+        clearSchools();
+        mBinding.save.setEnabled(false);
+        setSupportActionBar(mBinding.myToolbar);
+
+        // Load the states onto the spinner from the resource file
+        mStateAdapter = ArrayAdapter.createFromResource(this, R.array.states_list, android.R.layout.simple_spinner_item);
+        mStateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mBinding.state.setAdapter(mStateAdapter);
+
+        // Bind the schools array to the spinner
+        mSchoolAdapter = new ArrayAdapter<Schools>(this, android.R.layout.simple_spinner_item, mSchools);
+        mSchoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mBinding.school.setAdapter(mSchoolAdapter);
+
         mBinding.zip.setOnKeyListener(this);
         mBinding.city.setOnKeyListener(this);
         mBinding.save.setOnClickListener(this);
@@ -98,29 +113,11 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
             }
         });
 
-        // Load the states onto the spinner from the resource file
-        mStateAdapter = ArrayAdapter.createFromResource(this, R.array.states_list, android.R.layout.simple_spinner_item);
-        mStateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mBinding.state.setAdapter(mStateAdapter);
-        setSupportActionBar(mBinding.myToolbar);
+        mAzure = new FblaAzure(this);
+        mAzure.setLogonListener(this);
+        mAzure.doLogon(userId, token);
 
-        // Display your current school.
-        Account account = FblaLogon.getAccount();
-        mBinding.name.setText(account.getName());
-        mBinding.save.setEnabled(account.getName().length() > 0);
-        if (account.getSchool() != null) {
-            Schools school = account.getSchool();
-            mSchools.add(school);
-        } else {
-            clearSchools();
-        }
-
-        // Bind the schools array to the spinner
-        mSchoolAdapter = new ArrayAdapter<Schools>(this, android.R.layout.simple_spinner_item, mSchools);
-        mSchoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mBinding.school.setAdapter(mSchoolAdapter);
-
-        int miles = FblaLogon.getSearchMiles(this);
+        int miles = mAzure.getSearchMiles(this);
         switch (miles) {
             case 5:
                 mBinding.radius5.setChecked(true);
@@ -162,46 +159,43 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.save:
                 // The radius value is not saved in the database. It's stored on the phone.
-                boolean reloadLocal = false;
-                int miles = FblaLogon.getSearchMiles(this);
+                int miles = mAzure.getSearchMiles(this);
                 switch (miles) {
                     case 5:
                         if (mBinding.radius10.isChecked()) {
-                            reloadLocal = true;
-                            FblaLogon.setSearchMiles(this, 10);
+                            mAzure.setSearchMiles(this, 10);
                         }
                         break;
                     case 10:
                         if (mBinding.radius5.isChecked()) {
-                            reloadLocal = true;
-                            FblaLogon.setSearchMiles(this, 5);
+                            mAzure.setSearchMiles(this, 5);
                         }
                         break;
                 }
                 // Everything else is saved to the database on the Account
-                if (FblaLogon.getLoggedOn()) {
-                    Account account = FblaLogon.getAccount();
+                if (mAzure.getLoggedOn()) {
+                    Account account = mAzure.getAccount();
                     account.setName(mBinding.name.getText().toString());
                     Object o = mBinding.school.getSelectedItem();
                     if (o == null || ((Schools)o).getId() == "FAKE") {
                         account.setSchool(null);
-                        reloadLocal = true;
                     }
                     else {
                         Schools school = (Schools)o;
                         if (account.getSchoolId() == null || !account.getSchoolId().equals(school.getId())) {
                             account.setSchool(school);
-                            reloadLocal = true;
                         }
                     }
 
                     // The actual command to save to Azure must be done asynchronously
-                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                    AsyncTask<Object, Object, Object> task = new AsyncTask<Object, Object, Object>() {
                         @Override
-                        protected Void doInBackground(Void... params) {
+                        protected Void doInBackground(Object... params) {
                             try {
-                                MobileServiceTable<Account> mAccountTable = FblaLogon.getClient().getTable(Account.class);
-                                mAccountTable.update(FblaLogon.getAccount());
+                                FblaAzure azure = (FblaAzure)params[0];
+                                MobileServiceTable<Account> mAccountTable = azure.getClient().getTable(Account.class);
+                                Account account = azure.getAccount();
+                                mAccountTable.update(account);
                                 Log.d("AccountEdit:onClick", "AccountEdit Saved");
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -215,12 +209,9 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
                             }
                             return null;
                         }
-                    };
-                    task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                    }.execute(mAzure);
                 }
-                if (reloadLocal) {
-                    LocalController.Refresh(this);
-                }
+
                 break;
             case R.id.cancel:
                 // This just closes the activity, returning you to YardSaleMain.
@@ -270,13 +261,14 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
     // Then we get all of the schools in each zip code. Finally, we sort that list and load
     // them into the array, which is bound to the spinner.
     private void searchZip(final String city, final String state) {
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Object, Object, Object> task = new AsyncTask<Object, Object, Object>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Void doInBackground(Object... params) {
                 try {
+                    FblaAzure azure = (FblaAzure)params[0];
                     // Find matching zip codes for the city and state
                     final MobileServiceList<ZipCodes> zipCodes =
-                            FblaLogon.getClient().getTable(ZipCodes.class).where()
+                            azure.getClient().getTable(ZipCodes.class).where()
                                     .field("stateText").eq(state)
                                     .and().startsWith("city", city)
                                     .orderBy("city", QueryOrder.Ascending).execute().get();
@@ -289,7 +281,7 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
                     for (String z : uniqueZips) {
                         // Now get all of the schools in each zip code
                         final MobileServiceList<Schools> schools =
-                                FblaLogon.getClient().getTable(Schools.class).where()
+                                azure.getClient().getTable(Schools.class).where()
                                         .field("zip").eq(z)
                                         .orderBy("school", QueryOrder.Ascending).execute().get();
                         for (Schools school : schools) allSchools.add(school);
@@ -312,18 +304,18 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
                 }
                 return null;
             }
-        };
-        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        }.execute(mAzure);
     }
 
     // This is a very straight forward fetch of all schools in a given zip code.
     private void searchSchools(final String zip) {
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Object, Object, Object> task = new AsyncTask<Object, Object, Object>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Void doInBackground(Object... params) {
                 try {
+                    FblaAzure azure = (FblaAzure)params[0];
                     final MobileServiceList<Schools> schools =
-                            FblaLogon.getClient().getTable(Schools.class).where()
+                            azure.getClient().getTable(Schools.class).where()
                                     .field("zip").eq(zip)
                                     .orderBy("school", QueryOrder.Ascending).execute().get();
                     runOnUiThread(new Runnable() {
@@ -343,8 +335,7 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
 
                 return null;
             }
-        };
-        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        }.execute(mAzure);
     }
 
     @Override
@@ -377,5 +368,21 @@ public class AccountEdit extends AppCompatActivity implements View.OnClickListen
             }
         }
         return false;
+    }
+
+    @Override
+    public void onLogonComplete(Exception e) {
+        // Display your current school.
+        Account account = mAzure.getAccount();
+        mBinding.name.setText(account.getName());
+        mBinding.save.setEnabled(account.getName().length() > 0);
+        if (account.getSchool() != null) {
+            Schools school = account.getSchool();
+            addSchool(school);
+            mSchoolAdapter.notifyDataSetChanged();
+            mBinding.zip.setText(school.getZip());
+            mBinding.city.setText(school.getCity());
+            int spinnerPosition = mStateAdapter.getPosition(school.getStateText());
+            mBinding.state.setSelection(spinnerPosition, false);        }
     }
 }

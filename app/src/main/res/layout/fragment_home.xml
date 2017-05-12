@@ -78,7 +78,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="#ffffff"
-            android:text="Log Out"
+            android:text="Close App"
             android:id="@+id/logout"/>
     </LinearLayout>
 

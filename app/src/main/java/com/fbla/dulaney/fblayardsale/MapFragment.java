@@ -40,11 +40,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements LocalController.RefreshResultListener {
 
     private MapFragment.OnFragmentInteractionListener mListener;
     FragmentMapBinding mBinding;
-    private GoogleMap mMap;
+    private GoogleMap mMap = null;
+
+    @Override
+    public void onRefreshComplete() {
+        loadMap();
+    }
 
     public interface OnFragmentInteractionListener {
         public void onMapAttach(MapFragment f);
@@ -73,6 +78,7 @@ public class MapFragment extends Fragment {
         try {
             mListener = (MapFragment.OnFragmentInteractionListener) context;
             mListener.onMapAttach(this);
+            LocalController.attachRefreshListener(this);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -84,6 +90,7 @@ public class MapFragment extends Fragment {
         super.onDetach();
         mListener.onMapDetach(this);
         mListener = null;
+        LocalController.detachRefreshListener(this);
     }
 
     @Override
@@ -113,77 +120,87 @@ public class MapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
-                mMap.getUiSettings().setZoomControlsEnabled(true);
-                mMap.getUiSettings().setAllGesturesEnabled(true);
-
-                if (FblaLogon.getAccount() == null) return;
-                Schools mySchool = FblaLogon.getAccount().getSchool();
-                if (mySchool == null) return;
-                // Get all of the distinct schools from the LocalController
-                ArrayList<Schools> schools = new ArrayList<>();
-                HashMap<String, Integer> counts = new HashMap<String, Integer>();
-                for (int i = 0; i < LocalController.getItemCount(); i++) {
-                    SaleItem item = LocalController.getItem(i);
-                    Schools school = item.getAccount().getSchool();
-                    if (!schools.contains(school)) {
-                        schools.add(school);
-                        counts.put(school.getId(), new Integer(1));
-                    } else {
-                        counts.put(school.getId(), counts.get(school.getId()) + 1);
-                    }
-                }
-                LatLng myLL = null;
-                // Mark all nearby schools on the map.
-                for (Schools s : schools) {
-                    String title = s.getSchool();
-                    Integer sales = counts.get(s.getId());
-                    String desc = "Items for sale: " + sales.toString();
-                    LatLng ll = new LatLng(s.getLat(), s.getLong());
-                    BitmapDescriptor bm;
-                    if (s.getId().equals(mySchool.getId())) {
-                        myLL = ll;
-                        bm = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
-                    } else {
-                        // Change the hue of the marker depending on how many items are for sale at the school.
-                        switch (sales) {
-                            case 1:
-                            case 2:
-                                bm = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW);
-                                break;
-                            case 3:
-                            case 4:
-                                bm = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-                                break;
-                            default:
-                                bm = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-                                break;
-                        }
-                    }
-                    mMap.addMarker(new MarkerOptions().position(ll)
-                            .title(title).snippet(desc).icon(bm));
-                }
-                // See if your school has already been marked. If not, mark it.
-                if (myLL == null) {
-                    myLL = new LatLng(mySchool.getLat(), mySchool.getLong());
-                    String title = mySchool.getSchool();
-                    String desc = "Items for sale: 0";
-                    mMap.addMarker(new MarkerOptions().position(myLL)
-                            .title(title).snippet(desc)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                }
-                // Set the camera on your school
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(myLL));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
-
+                Log.d("Map", "Ready");
+                loadMap();
             }
         });
 
         return view;
     }
 
+    private void loadMap() {
+        if (mMap == null) return;
+        mMap.clear();
+        YardSaleMain main = (YardSaleMain)getActivity();
+        FblaAzure azure = main.getAzure();
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setAllGesturesEnabled(true);
+
+        if (azure.getAccount() == null) return;
+        Schools mySchool = azure.getAccount().getSchool();
+        if (mySchool == null) return;
+        // Get all of the distinct schools from the LocalController
+        ArrayList<Schools> schools = new ArrayList<>();
+        HashMap<String, Integer> counts = new HashMap<String, Integer>();
+        for (int i = 0; i < LocalController.getItemCount(); i++) {
+            SaleItem item = LocalController.getItem(i);
+            Schools school = item.getAccount().getSchool();
+            if (!schools.contains(school)) {
+                schools.add(school);
+                counts.put(school.getId(), new Integer(1));
+            } else {
+                counts.put(school.getId(), counts.get(school.getId()) + 1);
+            }
+        }
+        LatLng myLL = null;
+        // Mark all nearby schools on the map.
+        for (Schools s : schools) {
+            String title = s.getSchool();
+            Integer sales = counts.get(s.getId());
+            String desc = "Items for sale: " + sales.toString();
+            LatLng ll = new LatLng(s.getLat(), s.getLong());
+            BitmapDescriptor bm;
+            if (s.getId().equals(mySchool.getId())) {
+                myLL = ll;
+                bm = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
+            } else {
+                // Change the hue of the marker depending on how many items are for sale at the school.
+                switch (sales) {
+                    case 1:
+                    case 2:
+                        bm = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW);
+                        break;
+                    case 3:
+                    case 4:
+                        bm = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+                        break;
+                    default:
+                        bm = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+                        break;
+                }
+            }
+            mMap.addMarker(new MarkerOptions().position(ll)
+                    .title(title).snippet(desc).icon(bm));
+        }
+        // See if your school has already been marked. If not, mark it.
+        if (myLL == null) {
+            myLL = new LatLng(mySchool.getLat(), mySchool.getLong());
+            String title = mySchool.getSchool();
+            String desc = "Items for sale: 0";
+            mMap.addMarker(new MarkerOptions().position(myLL)
+                    .title(title).snippet(desc)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        }
+        // Set the camera on your school
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLL));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("Map", "Resume");
+        loadMap();
         mBinding.map.onResume();
     }
 

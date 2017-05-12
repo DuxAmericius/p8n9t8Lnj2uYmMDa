@@ -29,12 +29,14 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHolder> implements View.OnClickListener {
     private View.OnClickListener mParentListener;
-    ListCommentsBinding mBinding;
-    Comments mContext;
+    private ListCommentsBinding mBinding;
+    private Comments mContext;
+    private FblaAzure mAzure;
 
-    public CommentsAdapter (Comments context, View.OnClickListener onClickListener) {
+    public CommentsAdapter (Comments context, View.OnClickListener onClickListener, FblaAzure azure) {
         mContext = context;
         mParentListener = onClickListener;
+        mAzure = azure;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (!FblaLogon.getLoggedOn()) return;
+        if (!mAzure.getLoggedOn()) return;
         ItemComment comment = CommentListController.getComment(position);
         if (comment != null) {
             mBinding = holder.getBinding();
@@ -102,11 +104,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     }
 
     private void deleteComment(int position) {
-        if (!FblaLogon.getLoggedOn()) return;
+        if (!mAzure.getLoggedOn()) return;
 
         final int pos = position;
         final ItemComment comment = CommentListController.getComment(position);
-        final MobileServiceTable<ItemComment> mCommentTable = FblaLogon.getClient().getTable(ItemComment.class);
+        final MobileServiceTable<ItemComment> mCommentTable = mAzure.getClient().getTable(ItemComment.class);
         // Delete the comment from the database.
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override

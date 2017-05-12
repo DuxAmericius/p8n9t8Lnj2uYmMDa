@@ -64,7 +64,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="4. Type in zipcode"
+                android:text="4. Type in zipcode, then press Search"
                 android:textColor="#ffffff"
                 android:gravity="left"
                 android:layout_margin="10dp"
@@ -73,7 +73,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="5. OR Select state and type in city name"
+                android:text="5. OR Select state and type in city name, then press Search"
                 android:textColor="#ffffff"
                 android:gravity="left"
                 android:layout_margin="10dp"

@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.fbla.dulaney.fblayardsale.controller.CommentListController;
 import com.fbla.dulaney.fblayardsale.databinding.ActivityCommentsBinding;
@@ -27,24 +28,33 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.util.UUID;
 
-public class Comments extends AppCompatActivity implements View.OnClickListener {
-
-    ActivityCommentsBinding mBinding;
-    MobileServiceTable<ItemComment> mCommentTable;
+public class Comments extends AppCompatActivity implements View.OnClickListener, FblaAzure.LogonResultListener {
+    private ActivityCommentsBinding mBinding;
+    private MobileServiceTable<ItemComment> mCommentTable;
+    private FblaAzure mAzure;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
+        Bundle b = getIntent().getExtras();
+        String userId = b.getString("userId");
+        String token = b.getString("token");
+        if (userId == null || token == null) {
+            Toast.makeText(this, "Unable to connect to Azure. Please try again.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        mAzure = new FblaAzure(this);
+        mAzure.setLogonListener(this);
+        mAzure.doLogon(userId, token);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_comments);
         mBinding.post.setOnClickListener(this);
         mBinding.list.setLayoutManager(new LinearLayoutManager(this));
-        CommentsAdapter adapter = new CommentsAdapter(this, this);
-        CommentListController.AttachAdapter(adapter);
-        mBinding.list.setAdapter(adapter);
         setSupportActionBar(mBinding.myToolbar);
 
-        mCommentTable = FblaLogon.getClient().getTable(ItemComment.class);
+        mCommentTable = mAzure.getClient().getTable(ItemComment.class);
 
         Log.d("Comments", "onCreate");
     }
@@ -70,15 +80,15 @@ public class Comments extends AppCompatActivity implements View.OnClickListener 
 
     // Add a new item to the database.
     private void addItem(View view) {
-        if (!FblaLogon.getLoggedOn()) return;
+        if (!mAzure.getLoggedOn()) return;
 
         // Create a new comment from the ItemComment model.
         final ItemComment comment = new ItemComment();
         comment.setId(UUID.randomUUID().toString());
         comment.setComment(mBinding.newcomment.getText().toString());
-        comment.setUserId(FblaLogon.getUserId());
+        comment.setUserId(mAzure.getUserId());
         comment.setItemId(CommentListController.getItem().getId());
-        comment.setAccount(FblaLogon.getAccount());
+        comment.setAccount(mAzure.getAccount());
         CommentListController.addComment(comment);
 
         // Save the item to the database over the internet.
@@ -107,4 +117,10 @@ public class Comments extends AppCompatActivity implements View.OnClickListener 
         }
     }
 
+    @Override
+    public void onLogonComplete(Exception e) {
+        CommentsAdapter adapter = new CommentsAdapter(this, this, mAzure);
+        CommentListController.AttachAdapter(adapter);
+        mBinding.list.setAdapter(adapter);
+    }
 }

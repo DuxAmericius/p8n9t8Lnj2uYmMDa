@@ -37,7 +37,7 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.fbla.dulaney.fblayardsale.FblaLogon;
+import com.fbla.dulaney.fblayardsale.FblaAzure;
 import com.fbla.dulaney.fblayardsale.FblaPicture;
 import com.fbla.dulaney.fblayardsale.model.Account;
 import com.fbla.dulaney.fblayardsale.model.ItemComment;
@@ -98,27 +98,27 @@ public class LocalController {
     private static MobileServiceTable<Account> mAccountTable;
     private static MobileServiceTable<SaleItem> mSaleItemTable;
     private static MobileServiceTable<ItemComment> mItemCommentTable;
-    public static void Refresh(Context context) {
-        if (!FblaLogon.getLoggedOn()) return;
+    public static void Refresh(Context context, FblaAzure azure) {
+        if (!azure.getLoggedOn()) return;
         mSaleItems.clear();
 
-        final int searchMiles = FblaLogon.getSearchMiles(context);
-        Account myAccount = FblaLogon.getAccount();
+        final int searchMiles = azure.getSearchMiles(context);
+        Account myAccount = azure.getAccount();
         if (myAccount.getSchool() == null) {
             for (RecyclerView.Adapter adapter : mAdapters) {
                 adapter.notifyDataSetChanged();
             }
             return;
         }
-        final String searchUserId = FblaLogon.getUserId();
+        final String searchUserId = azure.getUserId();
         final Schools searchSchool = myAccount.getSchool();
         Log.d("LocalController:Refresh", searchSchool.getId()+" "+searchMiles);
 
-        mSchoolDistanceTable = FblaLogon.getClient().getTable(SchoolDistance.class);
-        mSchoolsTable = FblaLogon.getClient().getTable(Schools.class);
-        mAccountTable = FblaLogon.getClient().getTable(Account.class);
-        mSaleItemTable = FblaLogon.getClient().getTable(SaleItem.class);
-        mItemCommentTable = FblaLogon.getClient().getTable(ItemComment.class);
+        mSchoolDistanceTable = azure.getClient().getTable(SchoolDistance.class);
+        mSchoolsTable = azure.getClient().getTable(Schools.class);
+        mAccountTable = azure.getClient().getTable(Account.class);
+        mSaleItemTable = azure.getClient().getTable(SaleItem.class);
+        mItemCommentTable = azure.getClient().getTable(ItemComment.class);
         new AsyncTask<Object, Object, Object>() {
             @Override
             protected Object doInBackground(Object... params) {
@@ -174,8 +174,25 @@ public class LocalController {
                     for (RecyclerView.Adapter adapter : mAdapters) {
                         adapter.notifyDataSetChanged();
                     }
+                    for (RefreshResultListener l : mListeners) {
+                        l.onRefreshComplete();
+                    }
                 }
             }
         }.execute();
+    }
+
+    private static ArrayList<RefreshResultListener> mListeners = new ArrayList<>();
+    // Add a listener to call after refresh is complete
+    public static void attachRefreshListener(RefreshResultListener listener) {
+        mListeners.add(listener);
+    }
+    public static void detachRefreshListener(RefreshResultListener listener) {
+        mListeners.remove(listener);
+    }
+
+    // This is the interface to use on the logon callbacks.
+    public interface RefreshResultListener {
+        void onRefreshComplete();
     }
 }

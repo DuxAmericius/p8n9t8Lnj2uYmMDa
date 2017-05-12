@@ -35,27 +35,27 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
         HomeFragment.OnFragmentInteractionListener,
         LocalFragment.OnFragmentInteractionListener,
         MapFragment.OnFragmentInteractionListener,
-        FblaLogon.LogonResultListener{
+        FblaAzure.LogonResultListener{
 
     // Class Variables
-    FblaPagerAdapter mPagerAdapter;
-    ActivityYardsaleBinding mBinding;
-    FblaLogon mLogon;
+    private FblaPagerAdapter mPagerAdapter;
+    public ActivityYardsaleBinding mBinding;
+    private FblaAzure mAzure;
     private boolean mLogonComplete = false;
     private String mTitle;
 
     public void Logoff() {
-        mLogon.Logoff();
-        mLogon = null;
-        this.finish();
+        mAzure.doLogoff(this);
+        //this.finish();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("YardSaleMain", "onCreate");
         setContentView(R.layout.activity_yardsale);
 
-        mLogon = new FblaLogon(this);
+        mAzure = new FblaAzure(this);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_yardsale);
         mPagerAdapter = new FblaPagerAdapter(getSupportFragmentManager(), this);
@@ -73,11 +73,8 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
         mBinding.map.setEnabled(false);
         mBinding.pager.setEnabled(false);
 
-        mLogon.setLogonListener(this);
-        if (!FblaLogon.getLoggedOn()) {
-            mLogon.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-        }
-
+        mAzure.setLogonListener(this);
+        mAzure.doLogon();
     }
 
     //@Override
@@ -97,6 +94,8 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
         }
         mBinding.pager.setCurrentItem(pg, true);
     }
+
+    public FblaAzure getAzure() { return mAzure; }
 
     private HomeFragment mHomeFragment = null;
     public void onHomeAttach(HomeFragment f) {
@@ -125,13 +124,13 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
         mMapFragment = null;
     }
 
-    @Override
     public void onLogonComplete(Exception e) {
         if (e != null) {
             Toast.makeText(this, "Unable to connect to Azure. Please try again.", Toast.LENGTH_LONG).show();
             finish();
-        } else {
-            Account account = FblaLogon.getAccount();
+        } else if (!mLogonComplete) {
+            Log.d("YardSaleMain", "Logon Complete");
+            Account account = mAzure.getAccount();
             mLogonComplete = true;
             mBinding.myToolbar.setTitle(mTitle + " - " + account.getName());
             mBinding.local.setEnabled(true);
@@ -148,11 +147,21 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
             }
 
             if (account.getName() == null || account.getName().equals("")) {
-                startActivityForResult(new Intent(this, AccountEdit.class), 0);
+                Intent i = new Intent(this, AccountEdit.class);
+                Bundle b = new Bundle();
+                b.putString("userId", mAzure.getUserId());
+                b.putString("token", mAzure.getToken());
+                i.putExtras(b);
+                this.startActivityForResult(i, 0);
             } else {
-                MySalesController.Refresh();
-                LocalController.Refresh(this);
+                MySalesController.Refresh(mAzure);
+                LocalController.Refresh(this, mAzure);
             }
+        } else {
+            Account account = mAzure.getAccount();
+            MySalesController.Refresh(mAzure);
+            LocalController.Refresh(this, mAzure);
+            mBinding.myToolbar.setTitle(mTitle + " - " + account.getName());
         }
     }
 
@@ -180,9 +189,14 @@ public class YardSaleMain extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("YardSaleMain", "Result of AccountEdit");
         if (resultCode == RESULT_OK) {
-            mBinding.myToolbar.setTitle(mTitle + " - " + FblaLogon.getAccount().getName());
+            mAzure.doLoadAccount();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mAzure = null;
     }
 }

@@ -14,7 +14,7 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.fbla.dulaney.fblayardsale.FblaLogon;
+import com.fbla.dulaney.fblayardsale.FblaAzure;
 import com.fbla.dulaney.fblayardsale.model.Account;
 import com.fbla.dulaney.fblayardsale.model.ItemComment;
 import com.fbla.dulaney.fblayardsale.model.SaleItem;
@@ -70,12 +70,12 @@ public class CommentListController {
     public static void setItem(SaleItem item) { mItem = item; }
 
     // Refresh all comments and notify the adapter of the change
-    public static void Refresh() {
-        if (!FblaLogon.getLoggedOn()) return;
+    public static void Refresh(FblaAzure azure) {
+        if (!azure.getLoggedOn()) return;
         mComments.clear();
 
-        mItemCommentTable = FblaLogon.getClient().getTable(ItemComment.class);
-        final MobileServiceTable<Account> mAccountTable = FblaLogon.getClient().getTable(Account.class);
+        mItemCommentTable = azure.getClient().getTable(ItemComment.class);
+        final MobileServiceTable<Account> mAccountTable = azure.getClient().getTable(Account.class);
         new AsyncTask<Object, Object, Object>() {
             @Override
             protected Object doInBackground(Object... params) {

@@ -32,13 +32,20 @@ import com.fbla.dulaney.fblayardsale.databinding.FragmentLocalBinding;
 public class LocalFragment extends Fragment implements View.OnClickListener {
 
     private LocalFragment.OnFragmentInteractionListener mListener;
-    FragmentLocalBinding mBinding;
+    private FragmentLocalBinding mBinding;
 
     @Override
     public void onClick(View v) {
+        YardSaleMain main = (YardSaleMain)getActivity();
+        FblaAzure azure = main.getAzure();
         switch (v.getId()) {
             case R.id.comments:
-                getActivity().startActivity(new Intent(getActivity(), Comments.class));
+                Intent i = new Intent(main, Comments.class);
+                Bundle b = new Bundle();
+                b.putString("userId", azure.getUserId());
+                b.putString("token", azure.getToken());
+                i.putExtras(b);
+                getActivity().startActivity(i);
                 break;
             default:
                 break;
@@ -104,11 +111,11 @@ public class LocalFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         // Setup the RecyclerView here because the data changes.
-        FragmentActivity mParent = getActivity();
+        YardSaleMain mParent = (YardSaleMain)getActivity();
         mBinding.list.setLayoutManager(new LinearLayoutManager(mParent));
-        LocalAdapter adapter = new LocalAdapter(this);
+        LocalAdapter adapter = new LocalAdapter(this, mParent.getAzure());
         LocalController.AttachAdapter(adapter);
-        LocalController.Refresh(mParent);
+        LocalController.Refresh(mParent, mParent.getAzure());
         mBinding.list.setAdapter(adapter);
     }
 

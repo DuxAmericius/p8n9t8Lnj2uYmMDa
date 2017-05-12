@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="How to Logout:"
+                android:text="How to Exit:"
                 android:textColor="#ffffff"
                 android:gravity="center"
                 android:layout_margin="10dp"
@@ -46,7 +46,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2. Press &quot;Logout&quot;"
+                android:text="2. Press &quot;Close App&quot;"
                 android:textColor="#ffffff"
                 android:gravity="left"
                 android:layout_margin="10dp"

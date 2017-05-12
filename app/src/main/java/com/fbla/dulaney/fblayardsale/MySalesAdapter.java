@@ -28,12 +28,14 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHolder> implements View.OnClickListener {
     private View.OnClickListener mParentListener;
-    ListItemsBinding mBinding;
-    MySales mContext;
+    private ListItemsBinding mBinding;
+    private MySales mContext;
+    FblaAzure mAzure;
 
-    public MySalesAdapter (MySales context, View.OnClickListener onClickListener) {
+    public MySalesAdapter (MySales context, View.OnClickListener onClickListener, FblaAzure azure) {
         mContext = context;
         mParentListener = onClickListener;
+        mAzure = azure;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (!FblaLogon.getLoggedOn()) return;
+        if (!mAzure.getLoggedOn()) return;
         SaleItem item = MySalesController.getItem(position);
         if (item != null) {
             mBinding = holder.getBinding();
@@ -79,11 +81,11 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.comments:
-                if (FblaLogon.getLoggedOn()) {
+                if (mAzure.getLoggedOn()) {
                     int position = (int)v.getTag();
                     SaleItem item = MySalesController.getItem(position);
                     CommentListController.setItem(item);
-                    CommentListController.Refresh();
+                    CommentListController.Refresh(mAzure);
                     Log.d("MySalesAdapter", "Refreshed for " + position);
                     mParentListener.onClick(v);
                 }
@@ -135,11 +137,11 @@ public class MySalesAdapter extends RecyclerView.Adapter<MySalesAdapter.ViewHold
     }
 
     private void deleteItem(int position) {
-        if (!FblaLogon.getLoggedOn()) return;
+        if (!mAzure.getLoggedOn()) return;
 
         final int pos = position;
         final SaleItem item = MySalesController.getItem(position);
-        final MobileServiceTable<SaleItem> mSaleItemTable = FblaLogon.getClient().getTable(SaleItem.class);
+        final MobileServiceTable<SaleItem> mSaleItemTable = mAzure.getClient().getTable(SaleItem.class);
         // Delete the comment from the database.
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
