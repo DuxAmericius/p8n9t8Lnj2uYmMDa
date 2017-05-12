@@ -21,7 +21,7 @@ Documentation
     Documentation - Android Layouts.pdf (Printout of XML Layout source code)
     Documentation - Android Screenshots.pdf (Screenshots of Android application)
     Documentation - Microsoft Azure.pdf (Screenshots of Azure configuration)
-    Documentation - SQL Server Scripts.zip (Scripts for loading data into database)
+    Documentation - SQL Server Scripts.pdf (Scripts for loading data into database)
     
 Source
 
