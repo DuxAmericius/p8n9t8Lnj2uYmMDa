@@ -17,10 +17,11 @@ FBLA-YardSale.apk
     
 Documentation
 
-    Documentation - Android Java.pdf (Printout of Java source code)
-    Documentation - Android Layouts.pdf (Printout of XML Layout source code)
-    Documentation - Android Screenshots.pdf (Screenshots of Android application)
-    Documentation - Microsoft Azure.pdf (Screenshots of Azure configuration)
+    [Documentation - Android Java.pdf (Printout of Java source code)](https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa/blob/master/Documentation%20-%20Android%20Java.pdf)
+    [Documentation - Android Layouts.pdf (Printout of XML Layout source code)](https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa/blob/master/Documentation%20-%20Android%20Layouts.pdf)
+    [Documentation - Android Screenshots.pdf (Screenshots of Android application)](https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa/blob/master/Documentation%20-%20Android%20Screenshots.pdf)
+    [Documentation - Microsoft Azure.pdf (Screenshots of Azure configuration)](https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa/blob/master/Documentation%20-%20Microsoft%20Azure.pdf)
+    [Documentation - SQL Server Scripts.zip (Scripts for loading data into database)](https://github.com/DuxAmericius/p8n9t8Lnj2uYmMDa/blob/master/Documentation%20-%20SQL%20Server%20Scripts.zip)
     
 Source
 
